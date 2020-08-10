@@ -7,13 +7,16 @@
       </div>
       <div class="trick" slot="right">
           已有账号？
-          <el-link type="primary" class="act_login">登录</el-link>
+          <router-link type="primary" class="act_login" to="/login">登录</router-link>
       </div>
     </DiamondHeader>
     <form @submit.prevent="login" class="login_wrap">
       <div class="login_wrap1">
         <section class="login_message">
           <input type="text" placeholder="设置用户名" v-model="name">
+        </section>
+        <section class="login_verification">
+          <input type="email" placeholder="输入邮箱" v-model="email">
         </section>
         <section class="login_verification">
           <input type="password" placeholder="输入密码" v-model="pwd1">
@@ -40,14 +43,15 @@ export default {
       name: '', //用户名
       pwd1: '', //密码
       pwd2: '', //密码
+      email:'',
       showAlert: false, //显示提示组件
       alertText: null, //提示的内容
     }
   },
   computed:{
-    // rightEmail(){
-    //   return /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(this.email)
-    // }
+    rightEmail(){
+      return /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(this.email)
+    }
   },
   methods: {
     ...mapActions([
@@ -73,6 +77,14 @@ export default {
       }else if (this.pwd1 && this.pwd2 && !(this.pwd1 === this.pwd2)) {
         this.showAlert = true;
         this.alertText = '两次密码输入不一致'
+        return
+      }else if(!this.email){
+        this.showAlert = true;
+        this.alertText = '请输入邮箱'
+        return
+      }else if(this.email && !this.rightEmail){
+        this.showAlert = true;
+        this.alertText = '邮箱不正确'
         return
       }
     },
