@@ -67,8 +67,12 @@
             欢迎使用金刚石文档！
         </el-row>
         <el-row :gutter="20" style="width: 100%">
-            <el-col :span="1" :offset="9"><el-button round>登&nbsp;&nbsp;&nbsp;&nbsp;录</el-button></el-col>
-            <el-col :span="3" :offset="3"> <el-button type="primary" round>注&nbsp;&nbsp;&nbsp;&nbsp;册</el-button></el-col>
+            <router-link to="/login">
+                <el-col :span="1" :offset="9"><el-button round>登&nbsp;&nbsp;&nbsp;&nbsp;录</el-button></el-col>
+            </router-link>
+             <router-link to="/register">
+                <el-col :span="3" :offset="3"> <el-button type="primary" round>注&nbsp;&nbsp;&nbsp;&nbsp;册</el-button></el-col>
+             </router-link>
         </el-row>
     </div>
 </template>
