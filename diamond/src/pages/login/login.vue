@@ -32,7 +32,7 @@
 import {mapActions} from 'vuex'
 import AlertTip from '../../components/AlertTip'
 import DiamondHeader from '../../components/DiamondHeader'
-import {reqPwdLogin} from '../../api'
+import {reqGetStatus, reqPwdLogin,reqPwdLogout} from '../../api'
 
 export default {
   name: 'login',
@@ -75,14 +75,20 @@ export default {
         return
       }
       const result=await reqPwdLogin(name,pwd)
+      console.log('login测试1：')
       console.log(result)
       if(result.status===0){
         //成功
-        const user=result.username
+        console.log('login测试1：')
+        console.log(result)
+        const user=reqGetStatus()
+
+        console.log('login测试2：')
+        console.log(user)
         //存储用户
         this.$store.dispatch('recordUserInfo',user)
         //跳转页面
-        this.$router.replace('/person')
+        this.$router.replace('/personInfo')
       }else{
         //失败
         const msg=result.message

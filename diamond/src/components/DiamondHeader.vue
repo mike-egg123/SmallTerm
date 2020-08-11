@@ -15,7 +15,7 @@
 <!--          <el-link type="primary" class="act_login">登录</el-link>-->
 <!--      </div>-->
     </div>
-    <hr/>
+    <el-divider></el-divider>
   </div>
 </template>
 
@@ -34,6 +34,7 @@ export default {
   display: flex;
   width: 95%;
   margin: 20px auto;
+
 }
 .iconfont{
   font-size: 23px;

@@ -1,1 +1,1 @@
-export const RECEIVE_USER_INFO = 'receive_user_info' // 接收用户信息
+export const GET_USER_INFO = 'get_user_info' // 接收用户信息

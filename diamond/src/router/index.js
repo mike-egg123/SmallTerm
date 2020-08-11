@@ -4,7 +4,8 @@ import Login from '../pages/login/login'
 import Register from '../pages/register/register'
 import Person from '../pages/Person/Person'
 import Welcome from "../pages/Welcome";
-import Editor from "../pages/Editor/Editor";
+import PersonInfo from '../pages/PersonInfo/PersonInfo'
+import Editor from '../pages/Editor/Editor'
 
 Vue.use(Router)
 
@@ -23,10 +24,6 @@ export default new Router({
       component: Person
     },
     {
-      path: '/editor',  // 应该有文章的id
-      component: Editor
-    },
-    {
       path:'/',
       redirect:'/welcome'
     },
@@ -34,6 +31,14 @@ export default new Router({
       path:'/welcome',
       name:'Welcome',
       component:Welcome
+    },
+    {
+      path:'/personInfo',
+      component:PersonInfo
+    },
+    {
+      path:'/editor',
+      component: Editor
     },
   ]
 })

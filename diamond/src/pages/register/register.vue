@@ -27,6 +27,8 @@
       </div>
       <input type="submit" class="login_submit" value="注册">
       <AlertTip :alertText="alertText" v-show="showAlert" @closeTip="closeTip"/>
+<!--      <AlertTip :alertText="alertText" v-show="showAlert" @closeTip="closeTip"/>-->
+      <CompleteInfo :name="name" :email="email" :pwd1="pwd1" v-show="showInfo" @infoSubmit="infoSubmit"/>
     </form>
   </div>
 </template>
@@ -34,9 +36,9 @@
 <script>
 import {mapActions} from 'vuex'
 import AlertTip from '../../components/AlertTip'
+import CompleteInfo from '../../components/CompleteInfo'
 import DiamondHeader from '../../components/DiamondHeader'
 import {reqPwdRegister} from '../../api'
-import {Message} from 'element-ui'
 
 export default {
   name: 'register',
@@ -48,6 +50,10 @@ export default {
       email:'',
       showAlert: false, //显示提示组件
       alertText: null, //提示的内容
+      showInfo: false,
+      phone:'',
+      bio:'',
+      file: {}
     }
   },
   computed:{
@@ -63,14 +69,14 @@ export default {
       this.showAlert = true
       this.alertText = str
     },
-    open() {
+    open(str) {
       this.$message({
-          message: '注册成功！',
+          message: str,
           type: 'success',
           center: true,
-          offset:300
       })
     },
+
     // 发送登录信息
     async login () {
       const {pwd1, name, pwd2, email} = this
@@ -98,11 +104,12 @@ export default {
       console.log(result)
       if(result.status===0){
         //显示
-        this.open()
+        this.open('注册成功！')
         //成功
         const user=result.username
         //跳转页面
-        this.$router.replace('/login')
+        // this.$router.replace('/login')
+        this.showInfo=true
       }else{
         //失败
         const msg=result.message
@@ -118,10 +125,41 @@ export default {
       this.showAlert = false
       this.alertText = ''
     },
+    infoSubmit(phone,bio,file){
+      this.phone=phone
+      this.bio=bio
+      this.file=file
+      console.log(this.phone)
+      console.log(this.bio)
+
+      console.log(this.file)
+      if(!this.phone){
+        this.alertOut('请输入电话号码')
+        return
+      }
+      else if(!(/^1\d{10}$/.test(this.phone))){
+        this.alertOut('电话号码格式不正确')
+        return
+      }
+      else if(!this.bio){
+        this.alertOut('请写入个人简介')
+        return
+      }
+      // else if(!this.file.name){
+      //   this.alertOut('请传入个人头像')
+      //   return
+      // }
+      else {
+        this.open('个人信息填写完成！')
+        //跳转页面
+        this.$router.replace('/login')
+      }
+    }
   },
   components: {
     AlertTip,
-    DiamondHeader
+    DiamondHeader,
+    CompleteInfo
   }
 }
 </script>
