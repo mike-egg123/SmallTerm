@@ -63,7 +63,7 @@
                 </div>
             </div>
         </el-row>
-        <el-row class="welcomewords">
+        <el-row class="welcomewords" >
             欢迎使用金刚石文档！
         </el-row>
         <br>
@@ -86,16 +86,16 @@
 
 <style scoped>
     .content-wrap {
-        height: 100%;
+        height: 500px;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-top: 180px;
-        padding-bottom: 160px;
+        /*padding-top: 70px;*/
+        /*padding-bottom: 160px;*/
     }
-    .content-wrap .content-card {
+    .content-card {
         width: 400px;
-        height: 250px;
+        height: 200px;
         /*background: #FFFFFF;*/
         border-radius: 5px;
         display: flex;

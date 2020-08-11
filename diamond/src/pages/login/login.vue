@@ -32,6 +32,8 @@
 import {mapActions} from 'vuex'
 import AlertTip from '../../components/AlertTip'
 import DiamondHeader from '../../components/DiamondHeader'
+import {reqPwdLogin} from '../../api'
+
 export default {
   name: 'login',
   data() {
@@ -57,19 +59,36 @@ export default {
     changePassWordType() {
       this.showPassword = !this.showPassword
     },
-
+    alertOut(str){
+      this.showAlert = true
+      this.alertText = str
+    },
     // 发送登录信息
     async login() {
       const {pwd,name}=this
       // debugger
       if (!this.name) {
-        this.showAlert = true
-        this.alertText = '请输入用户名'
+        this.alertOut('请输入用户名')
         return
       } else if (!this.pwd) {
-        this.showAlert = true;
-        this.alertText = '请输入密码'
+        this.alertOut('请输入密码')
         return
+      }
+      const result=await reqPwdLogin(name,pwd)
+      console.log(result)
+      if(result.status===0){
+        //成功
+        const user=result.username
+        //存储用户
+        this.$store.dispatch('recordUserInfo',user)
+        //跳转页面
+        this.$router.replace('/person')
+      }else{
+        //失败
+        const msg=result.message
+        this.alertOut(msg)
+        this.pwd=''
+        this.name=''
       }
     },
     // 关系提示框
@@ -117,9 +136,10 @@ export default {
     height:20px;
     line-height:16px;
     color:#fff;
-    position:absolute;
-    top:53.5%;
-    right:450px;
+    position: absolute;
+    top:60.5%;
+    right:35%;
+
     transform:translateY(-50%);
   }
   .off{

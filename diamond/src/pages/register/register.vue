@@ -35,6 +35,8 @@
 import {mapActions} from 'vuex'
 import AlertTip from '../../components/AlertTip'
 import DiamondHeader from '../../components/DiamondHeader'
+import {reqPwdRegister} from '../../api'
+import {Message} from 'element-ui'
 
 export default {
   name: 'register',
@@ -57,35 +59,58 @@ export default {
     ...mapActions([
       'recordUserInfo',
     ]),
-
+    alertOut(str){
+      this.showAlert = true
+      this.alertText = str
+    },
+    open() {
+      this.$message({
+          message: '注册成功！',
+          type: 'success',
+          center: true,
+          offset:300
+      })
+    },
     // 发送登录信息
     async login () {
-      const {pwd1, name, pwd2} = this
+      const {pwd1, name, pwd2, email} = this
       // debugger
       if (!this.name) {
-        this.showAlert = true
-        this.alertText = '请输入用户名'
+        this.alertOut('请输入用户名')
         return
       } else if (!this.pwd1) {
-        this.showAlert = true;
-        this.alertText = '请输入密码'
+        this.alertOut('请输入密码')
         return
       } else if (!this.pwd2) {
-        this.showAlert = true;
-        this.alertText = '请再次输入密码'
+        this.alertOut('请再次输入密码')
         return
       }else if (this.pwd1 && this.pwd2 && !(this.pwd1 === this.pwd2)) {
-        this.showAlert = true;
-        this.alertText = '两次密码输入不一致'
+        this.alertOut('两次密码输入不一致')
         return
       }else if(!this.email){
-        this.showAlert = true;
-        this.alertText = '请输入邮箱'
+        this.alertOut('请输入邮箱')
         return
       }else if(this.email && !this.rightEmail){
-        this.showAlert = true;
-        this.alertText = '邮箱不正确'
+        this.alertOut('邮箱不正确')
         return
+      }
+      const result=await reqPwdRegister(name,email,pwd1)
+      console.log(result)
+      if(result.status===0){
+        //显示
+        this.open()
+        //成功
+        const user=result.username
+        //跳转页面
+        this.$router.replace('/login')
+      }else{
+        //失败
+        const msg=result.message
+        this.alertOut(msg)
+        this.pwd1=''
+        this.name=''
+        this.pwd2=''
+        this.email=''
       }
     },
     // 关系提示框

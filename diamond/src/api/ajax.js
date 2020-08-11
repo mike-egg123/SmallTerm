@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export default function ajax(url = '', data = {}, type = 'GET') {
+export default function ajax(url = '',data = {}, type = 'GET') {
   return new Promise(function (resolve, reject) {
 
     let promise
@@ -19,13 +19,15 @@ export default function ajax(url = '', data = {}, type = 'GET') {
       promise = axios.get(url)
     } else {
       // 发送post请求
-      promise = axios.post(url, data)
+      promise = axios.post(url,data)
     }
 
-    promise.then(response => {
+    promise.then(function (response) {
+      //成功
       resolve(response.data)
     })
-      .catch(error => {
+      .catch(function (error){
+        //失败
         reject(error)
       })
   })
