@@ -3,11 +3,13 @@
     <vue-ueditor-wrap v-model="msg" :config='myConfig'>
       <VueUeditorWrap/>
     </vue-ueditor-wrap>
+    <button @click="create()">submit</button>
   </div>
 </template>
 
 <script>
 import VueUeditorWrap from 'vue-ueditor-wrap'
+import { reqStore, reqCreate } from '../../api'
 
 export default {
   name: 'Editor',
@@ -16,6 +18,8 @@ export default {
   },
   data () {
   return {
+    userid: "26",
+    title: "rcyTest",
     msg: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>Vue + UEditor + v-model双向绑定</h2>',
     myConfig: {
       // 编辑器不自动被内容撑高
@@ -30,6 +34,13 @@ export default {
       UEDITOR_HOME_URL: '/static/UEditor/'
     }
   }},
+  methods: {
+    async create () {
+      const {userid,title,msg} = this
+      const result = await reqCreate(userid,title,msg)
+      console.log(result)
+    }
+  }
 }
 </script>
 

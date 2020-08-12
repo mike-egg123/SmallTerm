@@ -40,3 +40,10 @@ export const reqChange = (userid,phone,bio,avatar) => ajax('/apis/personality/ch
 export const reqGet = (id) => ajax('/apis/personality/',{
   id
 },'POST')
+
+/*
+创建在线文档
+ */
+export const reqCreate = (userid,title,content) => ajax('apis/article/create',{
+  userid,title,content
+},'POST')
