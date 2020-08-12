@@ -13,7 +13,7 @@ export const reqPwdLogin = (username, password) => ajax('/apis/user/login', {
 /*
 获取用户登录状态
  */
-export const reqGetStatus = () => ajax('/apis/user/getstatus', {},'POST')
+export const reqGetStatus = () => ajax('/apis/user/getstatus' )
 
 /*
 用户注册
@@ -30,20 +30,9 @@ export const reqPwdLogout = () => ajax('/apis/user/logout')
 /*
 修改个人信息
  */
-export const reqChange = (userid,phone,bio,avatar) => ajax('/apis/personality/change',{
-  userid,phone,bio,avatar
-},'POST')
+export const reqChange = (formData) => ajax('/apis/personality/change',formData,'POST')
 
 /*
 查看个人信息
  */
-export const reqGet = (id) => ajax('/apis/personality/',{
-  id
-},'POST')
-
-/*
-创建在线文档
- */
-export const reqCreate = (userid,title,content) => ajax('apis/article/create',{
-  userid,title,content
-},'POST')
+export const reqGet = (formData) => ajax('/apis/personality/get',formData,'POST')

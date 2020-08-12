@@ -79,8 +79,15 @@
     </div>
 </template>
 <script>
+// import {mapActions} from 'vuex'
   export default {
-    name: "Welcome"
+    name: "Welcome",
+    // mounted () {
+    //   this.getUserInfo()
+    // },
+    // methods:{
+    //   ...mapActions(['getUserInfo'])
+    // }
   }
 </script>
 

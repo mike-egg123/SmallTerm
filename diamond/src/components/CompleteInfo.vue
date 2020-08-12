@@ -1,5 +1,5 @@
 <template>
-  <div class="Info_wrap">
+  <form class="Info_wrap" id="info_wrap">
     <div class="Info_title">请完善个人信息</div>
     <div class="Info_name">
       <span>昵称</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -26,9 +26,11 @@
       <el-upload
         action="#"
         list-type="picture-card"
-        :auto-upload="false">
+        :http-request="httpRequest"
+        :before-upload="beforeUpload"
+      >
         <i slot="default" class="el-icon-plus"></i>
-        <div slot="file" slot-scope="{file}">
+        <div slot="file" slot-scope="{file}" id="imgFile">
           <img
             class="el-upload-list__item-thumbnail"
             :src="file.url" alt=""
@@ -57,16 +59,15 @@
       </span>
         </div>
       </el-upload>
-
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt="">
       </el-dialog>
     </div>
-    <el-button type="primary" round style="width: 200px;" @click="infoSubmit">提交</el-button>
-  </div>
+    <el-button id="btn" type="primary" round style="width: 200px;" @click="infoSubmit">提交</el-button>
+  </form>
 </template>
-
 <script>
+
 export default {
   name: 'CompleteInfo',
   props:{
@@ -81,23 +82,37 @@ export default {
       avatar:'',
       dialogImageUrl: '',
       dialogVisible: false,
-      disabled: false
+      disabled: false,
+      file:{},
+      file1:{},
+      file2:{}
     }
   },
   methods:{
+    beforeUpload(file){
+      this.file2=file
+      console.log(this.file2)
+    },
     handleRemove(file) {
       console.log(file);
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.raw.url;
+      this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
     handleDownload(file) {
       console.log(file);
     },
-    infoSubmit(file){
-      console.log(this.dialogImageUrl)
-      this.$emit('infoSubmit',this.phone,this.bio,file)
+    httpRequest(e) {
+      this.file1 = e.file;
+    },
+    infoSubmit(){
+      this.file=document.getElementById('imgFile')
+      console.log("file")
+      console.log(this.file)
+      console.log("file1")
+      console.log(this.file1)
+      this.$emit('infoSubmit',this.phone,this.bio,this.file,this.file1)
     }
   }
 }

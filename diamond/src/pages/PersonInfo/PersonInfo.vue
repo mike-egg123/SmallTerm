@@ -34,59 +34,131 @@
     <div class="personInfo_wrap">
       <div class="personInfo_left_wrap">
         <div class="personInfo_img_wrap">
-          <img :src="src" alt="">
+          <img :src="userInfo.avatar" alt="暂无头像">
         </div>
-        <div class="personInfo_left_text">用户信息查询</div>
+        <div class="personInfo_left_text">头 像</div>
       </div>
       <div class="personInfo_mid_wrap"></div>
-      <div class="personInfo_right_wrap">
-          <div class="personInfo_name"><span class="iconfont icon-gerenyonghutouxiang"></span> 昵称
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" v-model="userInfo.username">
-            &nbsp;&nbsp;&nbsp;<el-link type="primary" class="change">修改</el-link>
-          </div>
-        <div class="personInfo_email"><span class="iconfont icon-youxiang2"></span> 邮箱
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="email" v-model="userInfo.email">
-          &nbsp;&nbsp;&nbsp;<el-link type="primary" class="change">修改</el-link>
+
+      <form class="personInfo_right_wrap">
+        <div class="personInfo_id"><span class="iconfont icon-idcard"></span> ID
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="email" v-model="userInfo.userid" readonly>
         </div>
-        <div class="personInfo_pwd"><span class="iconfont icon-mima1"></span> 密码
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" v-model="userInfo.password">
-          &nbsp;&nbsp;&nbsp;<el-link type="primary" class="change">修改</el-link>
+        <div class="personInfo_name"><span class="iconfont icon-gerenyonghutouxiang"></span> 昵称
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" v-model="userInfo.username" readonly>
+        </div>
+        <div class="personInfo_email"><span class="iconfont icon-youxiang2"></span> 邮箱
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="email" v-model="userInfo.email" readonly>
+        </div>
+        <div class="personInfo_phone"><span class="iconfont icon-shouji4"></span> 电话
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" v-model="userInfo.phone" readonly>
+          <el-link type="primary" class="change" @click="ChangePhone">修改</el-link>
         </div>
         <div class="personInfo_intro"><span class="iconfont icon-zhuye"></span> 简介
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" v-model="userInfo.bio">
-          &nbsp;&nbsp;&nbsp;<el-link type="primary" class="change">修改</el-link>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" v-model="userInfo.bio" readonly>
+         <el-link type="primary" class="change" @click="ChangeIntro">修改</el-link>
         </div>
-        <el-button type="danger" class="logout">退出登录</el-button>
-      </div>
+        <el-button type="danger" class="logout" @click="logout">退出登录</el-button>
+      </form>
+
     </div>
   </div>
 </template>
 
 <script>
 import DiamondHeader from '../../components/DiamondHeader'
-import {mapState} from 'vuex'
+import {mapActions,mapState} from 'vuex'
+import {reqChange} from '../../api'
+
 export default {
   name: "PersonInfo",
   components:{
     DiamondHeader
   },
-  computed:{
-    ...mapState(['userInfo'])
+  mounted () {
+    this.$store.dispatch('getUserInfo')
   },
   data:function (){
     return{
-      src:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597124598217&di=cf1fcfdefb903b90d663b9c1b7d011b2&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201901%2F17%2F20190117230425_eofqv.thumb.700_0.jpg'
+      src:'',
     }
+  },
+  computed:{
+    ...mapState(['userInfo'])
   },
   methods:{
-    test(){
-      console.log('PersonInfo测试：')
-      console.log(this.userInfo)
+    ...mapActions(['getUserInfo']),
+    AlertOpen(str,title,pattern,errors){
+      this.$prompt(str, title, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: pattern?pattern:'',
+        // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        inputErrorMessage: errors?errors:''
+      }).then(({value}) => {
+        this.$message({
+          type: 'success',
+          message: title + '成功！'
+        });
+        if(pattern){
+          console.log('patten')
+          this.phone=value
+          console.log('PersonInfo!!!')
+          // const avatar=this.userInfo.avatar
+          this.userInfo.phone=value
+          let formData = new FormData()
+          formData.append("userid", this.userInfo.userid)
+          formData.append("phone", this.phone)
+          formData.append("bio", this.userInfo.bio)
+          formData.append("avatar", this.userInfo.avatar)
+          //,this.userInfo.avatar.name
+          reqChange(formData)
+        }
+        else{
+          this.bio=value
+          this.userInfo.bio=value
+          let formData = new FormData()
+          formData.append("userid", this.userInfo.userid)
+          formData.append("phone", this.userInfo.phone)
+          formData.append("bio", this.bio)
+          formData.append("avatar", this.userInfo.avatar)
+          //,this.userInfo.avatar.name
+          reqChange(formData)
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消修改'
+        });
+      });
+    },
+    ChangePhone(){
+      this.AlertOpen('请输入新手机号码','修改手机号码',/^1\d{10}$/,'输入手机号码格式不正确')
+    },
+    ChangeIntro(){
+      this.AlertOpen('请输入新个人简介','修改个人简介')
+    },
+    logout(){
+      this.$confirm('确认退出吗?', '提示', {
+        confirmButtonText: '退出',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
+        },
+        this.$store.dispatch('logout')
+        );
+        this.$router.replace('/welcome')
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        });
+      });
     }
   },
-  mounted () {
-    this.test();
-  }
 }
 </script>
 
@@ -123,7 +195,7 @@ export default {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-
+    background-color: #AAD3FE;
   }
 
   /*竖线分割线*/
@@ -159,6 +231,16 @@ export default {
     letter-spacing: 1px;
     font-weight: bold;
     text-decoration: none;
+  }
+  .personInfo_id{
+    /*background-color: #C2E0FF;*/
+    width: 300px;
+    margin-left: 49px;
+    /*margin-right: 512px;*/
+    /*margin-bottom: 20px;*/
+  }
+  .personInfo_name,.personInfo_email{
+    margin-left: -23px;
   }
   /*
   退出登录

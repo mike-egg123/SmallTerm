@@ -32,7 +32,7 @@
 import {mapActions} from 'vuex'
 import AlertTip from '../../components/AlertTip'
 import DiamondHeader from '../../components/DiamondHeader'
-import {reqGetStatus, reqPwdLogin,reqPwdLogout} from '../../api'
+import {reqPwdLogin} from '../../api'
 
 export default {
   name: 'login',
@@ -65,7 +65,7 @@ export default {
     },
     // 发送登录信息
     async login() {
-      const {pwd,name}=this
+      const {name,pwd}=this
       // debugger
       if (!this.name) {
         this.alertOut('请输入用户名')
@@ -75,27 +75,29 @@ export default {
         return
       }
       const result=await reqPwdLogin(name,pwd)
-      console.log('login测试1：')
+      console.log("result:")
       console.log(result)
+      console.log(result.status)
       if(result.status===0){
         //成功
         console.log('login测试1：')
         console.log(result)
-        const user=reqGetStatus()
-
-        console.log('login测试2：')
-        console.log(user)
         //存储用户
-        this.$store.dispatch('recordUserInfo',user)
+        this.recordUserInfo(result)
         //跳转页面
         this.$router.replace('/personInfo')
-      }else{
+      }
+
+      else{
         //失败
-        const msg=result.message
-        this.alertOut(msg)
+        console.log('login测试失败：')
+        console.log(result)
+        console.log(result.status)
+        this.alertOut('用户名或者密码不正确，请重新登录！')
         this.pwd=''
         this.name=''
       }
+
     },
     // 关系提示框
     closeTip() {

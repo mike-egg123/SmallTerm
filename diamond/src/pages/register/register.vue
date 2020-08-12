@@ -38,7 +38,7 @@ import {mapActions} from 'vuex'
 import AlertTip from '../../components/AlertTip'
 import CompleteInfo from '../../components/CompleteInfo'
 import DiamondHeader from '../../components/DiamondHeader'
-import {reqPwdRegister} from '../../api'
+import {reqPwdRegister,reqChange} from '../../api'
 
 export default {
   name: 'register',
@@ -51,9 +51,10 @@ export default {
       showAlert: false, //显示提示组件
       alertText: null, //提示的内容
       showInfo: false,
-      phone:'',
-      bio:'',
-      file: {}
+      file: {},
+      file1: {},
+      imgUrl:'',
+      id:0
     }
   },
   computed:{
@@ -63,7 +64,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'recordUserInfo',
+      'recordUserInfo','recordUserImg'
     ]),
     alertOut(str){
       this.showAlert = true
@@ -106,7 +107,10 @@ export default {
         //显示
         this.open('注册成功！')
         //成功
-        const user=result.username
+        console.log(result)
+        console.log(result.userid)
+        this.id=result.userid
+        console.log(this.id)
         //跳转页面
         // this.$router.replace('/login')
         this.showInfo=true
@@ -125,14 +129,17 @@ export default {
       this.showAlert = false
       this.alertText = ''
     },
-    infoSubmit(phone,bio,file){
+    infoSubmit(phone,bio,file,file1){
       this.phone=phone
       this.bio=bio
       this.file=file
+      this.file1=file1
       console.log(this.phone)
       console.log(this.bio)
-
       console.log(this.file)
+      console.log(this.file1)
+      // console.log(this.file.getElementsByTagName('img')[0].src.slice(5))
+
       if(!this.phone){
         this.alertOut('请输入电话号码')
         return
@@ -145,12 +152,25 @@ export default {
         this.alertOut('请写入个人简介')
         return
       }
-      // else if(!this.file.name){
-      //   this.alertOut('请传入个人头像')
-      //   return
-      // }
+      else if(this.file==null){
+        this.alertOut('请传入个人头像')
+        return
+      }
       else {
         this.open('个人信息填写完成！')
+        this.imgUrl=this.file.getElementsByTagName('img')[0].src.slice(5)
+        console.log(this.id)
+
+        console.log('file1!')
+        //formdata格式
+        let formData=new FormData()
+        formData.append("userid",this.id)
+        formData.append("phone",this.phone)
+        formData.append("bio",this.bio)
+        formData.append("avatar",this.file1,this.file1.name)
+        const result2 = reqChange(formData)
+        console.log("result2:")
+        console.log(result2)
         //跳转页面
         this.$router.replace('/login')
       }
