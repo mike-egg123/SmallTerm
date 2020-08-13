@@ -10,6 +10,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.use(ElementUI);
 Vue.config.productionTip=false
+//Vue.component('vue-ueditor-wrap', VueUeditorWrap)
 
 /* eslint-disable no-new */
 new Vue({

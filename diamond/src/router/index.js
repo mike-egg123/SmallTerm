@@ -5,6 +5,7 @@ import Register from '../pages/register/register'
 import Person from '../pages/Person/Person'
 import Welcome from "../pages/Welcome";
 import PersonInfo from '../pages/PersonInfo/PersonInfo'
+import Editor from '../pages/Editor/Editor'
 
 Vue.use(Router)
 
@@ -34,6 +35,10 @@ export default new Router({
     {
       path:'/',
       redirect:'/welcome'
+    },
+    {
+      path:'/editor',
+      component:Editor
     }
   ]
 })

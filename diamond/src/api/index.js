@@ -36,3 +36,15 @@ export const reqChange = (formData) => ajax('/apis/personality/change',formData,
 查看个人信息
  */
 export const reqGet = (formData) => ajax('/apis/personality/get',formData,'POST')
+
+/*
+创建在线文档
+ */
+export const reqCreate = (userid,title,content) => ajax('/apis/article/create',{
+  userid,title,content
+},'POST')
+
+/*
+查看文档
+ */
+export const reqFetch = (articleid) => ajax('/apis/article/get',{articleid},'POST')

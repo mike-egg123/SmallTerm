@@ -1,15 +1,17 @@
 <template>
-  <div>
+  <div>    
     <vue-ueditor-wrap v-model="msg" :config='myConfig'>
       <VueUeditorWrap/>
     </vue-ueditor-wrap>
     <button @click="create()">submit</button>
+    <button @click="fresh()">fetch</button>
+    <p>上面应该显示刚才编辑好的内容</p>
   </div>
 </template>
 
 <script>
 import VueUeditorWrap from 'vue-ueditor-wrap'
-import { reqStore, reqCreate } from '../../api'
+import { reqStore, reqCreate, reqFetch } from '../../api'
 
 export default {
   name: 'Editor',
@@ -18,9 +20,10 @@ export default {
   },
   data () {
   return {
-    userid: "26",
+    userid: "28",
     title: "rcyTest",
-    msg: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>Vue + UEditor + v-model双向绑定</h2>',
+    articleid: "52",
+    msg: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>默认文本</h2>',
     myConfig: {
       // 编辑器不自动被内容撑高
       autoHeightEnabled: false,
@@ -38,7 +41,15 @@ export default {
     async create () {
       const {userid,title,msg} = this
       const result = await reqCreate(userid,title,msg)
-      console.log(result)
+      this.articleid = result.articleid
+      console.log(result)    
+    },
+    async fresh () {
+      const {articleid} = this
+      alert(this.articleid)  
+      const result = await reqFetch(this.articleid)
+      this.msg = result.content
+      console.log(this.msg)
     }
   }
 }
