@@ -1,17 +1,17 @@
 <template>
   <div>    
-    <vue-ueditor-wrap v-model="msg" :config='myConfig'>
+    <vue-ueditor-wrap v-model="content" :config='myConfig'>
       <VueUeditorWrap/>
     </vue-ueditor-wrap>
-    <button @click="create()">submit</button>
-    <button @click="fresh()">fetch</button>
-    <p>上面应该显示刚才编辑好的内容</p>
+    <button @click="create()">create</button>
+    <button @click="fresh()">view</button>
+    <button @click="change()">change</button>
   </div>
 </template>
 
 <script>
 import VueUeditorWrap from 'vue-ueditor-wrap'
-import { reqStore, reqCreate, reqFetch } from '../../api'
+import { reqStore, reqCreate, reqFetch, reqUpdate } from '../../api'
 
 export default {
   name: 'Editor',
@@ -20,10 +20,11 @@ export default {
   },
   data () {
   return {
-    userid: "28",
-    title: "rcyTest",
-    articleid: "52",
-    msg: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>默认文本</h2>',
+    userid: "37",//
+    title: "rcyTest",//
+    permission: 0,//
+    articleid: "37",//
+    content: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>默认文本</h2>',
     myConfig: {
       // 编辑器不自动被内容撑高
       autoHeightEnabled: false,
@@ -38,18 +39,25 @@ export default {
     }
   }},
   methods: {
+    //创建新文档
     async create () {
-      const {userid,title,msg} = this
-      const result = await reqCreate(userid,title,msg)
+      const {userid,title,content,permission} = this
+      const result = await reqCreate(userid,title,content,permission)
       this.articleid = result.articleid
-      console.log(result)    
+      //console.log(result)
     },
+    //读取文档
     async fresh () {
-      const {articleid} = this
-      alert(this.articleid)  
-      const result = await reqFetch(this.articleid)
-      this.msg = result.content
-      console.log(this.msg)
+      const {userid,articleid} = this
+      const result = await reqFetch(userid,articleid)
+      this.content = result.content
+      //console.log(this.articleid + ": " + this.content)
+    },
+    //编辑文档并提交
+    async change() {
+      const {articleid,userid,title,content,permission} = this
+      const result = await reqUpdate(articleid,userid,title,content,permission)
+      //console.log(result)
     }
   }
 }

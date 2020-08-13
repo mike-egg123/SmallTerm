@@ -2,10 +2,11 @@
 与后台交互模块
  */
 import ajax from './ajax'
+const MY_URL='http://182.92.239.145'
 /**
  * 账号密码登录
  */
-const MY_URL='http://182.92.239.145'
+
 export const reqPwdLogin = (username, password) => ajax('/apis/user/login', {
   username,password
 }, 'POST')
@@ -40,11 +41,20 @@ export const reqGet = (formData) => ajax('/apis/personality/get',formData,'POST'
 /*
 创建在线文档
  */
-export const reqCreate = (userid,title,content) => ajax('/apis/article/create',{
-  userid,title,content
+export const reqCreate = (userid,title,content,permission) => ajax('/apis/article/create',{
+  userid,title,content,permission
 },'POST')
 
 /*
 查看文档
  */
-export const reqFetch = (articleid) => ajax('/apis/article/get',{articleid},'POST')
+export const reqFetch = (articleid,userid) => ajax('/apis/article/get',{
+  articleid,userid
+},'POST')
+
+/*
+修改文档
+ */
+export const reqUpdate = (articleid,userid,title,content,permission) => ajax('/apis/article/update',{
+  articleid,userid,title,content,permission
+},'POST')
