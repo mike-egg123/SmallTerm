@@ -37,8 +37,26 @@ export const reqChange = (formData) => ajax('/apis/personality/change',formData,
  */
 export const reqGet = (formData) => ajax('/apis/personality/get',formData,'POST')
 
-//创建、修改、查看文档没有写
+/*
+创建在线文档
+ */
+export const reqCreate = (userid,title,content,permission) => ajax('/apis/article/create',{
+  userid,title,content,permission
+},'POST')
 
+/*
+查看文档
+ */
+export const reqFetch = (articleid,userid) => ajax('/apis/article/get',{
+  articleid,userid
+},'POST')
+
+/*
+修改文档
+ */
+export const reqUpdate = (articleid,userid,title,content,permission) => ajax('/apis/article/update',{
+  articleid,userid,title,content,permission
+},'POST')
 
 /*
   删除文档
@@ -96,3 +114,8 @@ export const reqGetGarbageArticle = (userid) => ajax('/apis/article/getallcreati
 export const reqUpdatingcodeArticle = (updatingcode,articleid) => ajax('/apis/article/updatingcodechange',{
   updatingcode,articleid
 },'POST')
+
+/*
+获取登录验证码
+ */
+export const reqGetValidCode = () => ajax('/apis/user/getvalidcode','','POST')

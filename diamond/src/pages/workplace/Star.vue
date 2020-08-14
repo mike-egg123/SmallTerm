@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="4" v-for="(likeItem, index) in likeList" :key="index" :offset="index > 0 ? 2 : 0">
+      <el-col :span="4" v-for="(likeItem, index) in likeList" :key="index" :offset="index%4==0?0:2">
         <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
           <LikeArticle :likeItem="likeItem"/>
         </el-card>

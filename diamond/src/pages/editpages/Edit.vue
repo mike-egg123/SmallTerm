@@ -1,127 +1,134 @@
 <template>
-    <div>
-      <DiamondHeader title="个人工作台">
-        <div class="back" slot="left">
-          <div class="content-wrap" style="overflow: visible">
-            <div class="content-card" style="overflow: visible">
-              <div class="diamond-wrap" style="overflow: visible">
-                <div class="diamond" style="overflow: visible">
-                  <div class="diamond-side side--top">
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
+  <div>
+    <DiamondHeader title="xxx.doc">
+      <div class="back" slot="left">
+        <i class="iconfont icon-fanhui1"></i>
+        <el-link target="_blank" @click="handleBack" class="act_back" :underline="false">返回</el-link>
+        <div class="content-wrap">
+          <div class="content-card">
+            <div class="diamond-wrap">
+              <div class="diamond">
+                <div class="diamond-side side--top">
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                </div>
+                <div class="diamond-side side--bottom">
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
                   </div>
-                  <div class="diamond-side side--bottom">
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="person_wrap" slot="right">
-          <div class="search_warp">
-            <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
-              <el-button slot="append" icon="iconfont icon-sousuo1"></el-button>
-            </el-input>
-          </div>
-          <div class="talk_wrap">
-            <el-dropdown style="margin: auto">
-              <el-badge :value="info_count" class="item">
-              <el-button icon="el-icon-bell" circle></el-button>
-            </el-badge>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>团队邀请&nbsp;&nbsp;&nbsp;<el-badge class="mark" :value="3" style="margin-top: -5px"/></el-dropdown-item>
-                <el-dropdown-item>文档评论&nbsp;&nbsp;&nbsp;<el-badge class="mark" :value="3" style="margin-top: -5px" /></el-dropdown-item>
-                <el-dropdown-item>踢出团队&nbsp;&nbsp;&nbsp;<el-badge class="mark" :value="3" style="margin-top: -5px" /></el-dropdown-item>
-                <el-dropdown-item>加入/退出团队&nbsp;&nbsp;&nbsp;<el-badge class="mark" :value="3"  style="margin-top: -5px"/></el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <div class="userInfo_wrap">
-            <el-button icon="el-icon-user-solid" circle @click="goTo_PersonInfo"></el-button>
-          </div>
-        </div>
-      </DiamondHeader>
-      <el-container>
-        <el-aside width="15%">
-          <ul>
-            <router-link to="/workplace/newdoc" class="choice"><i class="el-icon-edit"></i>&nbsp;创建新文档</router-link>
-            <router-link to="/workplace/recent" class="choice"><i class="el-icon-timer"></i>&nbsp;最近浏览</router-link>
-            <router-link to="/workplace/star" class="choice"><i class="el-icon-star-off"></i>&nbsp;收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;藏</router-link>
-            <router-link to="/workplace/mydoc" class="choice"><i class="el-icon-document-copy"></i>&nbsp;我创建的</router-link>
-            <router-link to="/workplace/team" class="choice"><i class="el-icon-ship"></i>&nbsp;团&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;队</router-link>
-            <router-link to="/workplace/recycler" class="choice"><i class="el-icon-delete"></i>&nbsp;回&nbsp;收&nbsp;站</router-link>
-          </ul>
-        </el-aside>
-<!--        <el-aside width="1px" style="background-color: #9a9a9a" ></el-aside>-->
-        <el-main>
-          <router-view></router-view>
-<!--          <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>-->
-        </el-main>
-      </el-container>
-    </div>
+      </div>
+      <div class="doc_info" slot="middle">
+        <li>文档创建者&nbsp;:&nbsp;xxx</li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <li>所属团队&nbsp;:&nbsp;11111</li>
+        <br>
+        <li>创建时间&nbsp;:&nbsp;2020/8/11 20:00</li>&nbsp;&nbsp;&nbsp;&nbsp;
+        <li>修改时间&nbsp;:&nbsp;2020/8/12 20:00</li>&nbsp;&nbsp;
+        <li>文档大小&nbsp;:&nbsp;100kb</li>
+      </div>
+      <div class="person_wrap" slot="right">
+        <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start"><el-button icon="el-icon-star-on" circle type="warning"></el-button></el-tooltip>
+        <el-tooltip class="item" effect="dark" content="分享" placement="bottom-start"><el-button icon="el-icon-share" circle type="primary" @click="link"></el-button></el-tooltip>
+        <el-tooltip class="item" effect="dark" content="添加评论" placement="bottom-start"><el-button icon="el-icon-chat-line-round" circle type="success" @click="newcomment"></el-button></el-tooltip>
+      </div>
+    </DiamondHeader>
+    <el-container>
+      <el-aside width="78%">
+        <editor></editor>
+      </el-aside>
+      <el-main>
+        <ul class="comment_list">
+          <li v-for="(comment,index) in comments" style="padding: 10px;">
+            <div style="text-align: left; font-size: 18px;font-weight: bold;padding-top: 5px;padding-bottom: 5px;color: #409EFF">{{comment.name}}</div>
+            <div style="text-align: left; padding-left: 10px;padding-top: 5px;padding-bottom: 5px">&nbsp;&nbsp;&nbsp;&nbsp;{{comment.content}}</div>
+            <div style="text-align: right;padding-top: 5px;">{{comment.time}}</div>
+          </li>
+        </ul>
+      </el-main>
+    </el-container>
+  </div>
 </template>
 <script>
-  import DiamondHeader from '../../components/DiamondHeader'
-  export default {
-    name: 'Workplace',
-    components: {DiamondHeader},
-    data(){
-      return{
-        select:false,
-        input:'',
-        info_count:1,
-        msg1:'团队邀请'
-      }
+import DiamondHeader from '../../components/DiamondHeader'
+import Editor from '../Editor/Editor'
+export default {
+  name: 'Edit',
+  components: {Editor, DiamondHeader},
+  data(){
+    return{
+      comments:[
+        {id:1,name:'jack1',content:'这篇文章写的不错',time:'2020/8/13 15:00'},
+        {id:2,name:'jack2',content:'？？九折水瓶',time:'2020/8/13 15:01'},
+        {id:3,name:'jack3',content:'不会吧不会吧不会真的有人觉得他写的好吧这我接受不了的',time:'2020/8/13 15:02'},
+        {id:4,name:'jack4',content:'啊这...',time:'2020/8/13 15:03'},
+      ],
+      select:false,
+      input:'',
+      info_count:1
+    }
+  },
+  methods:{
+    handleBack(){
+      this.$router.replace('/workplace')
     },
-    methods:{
-      goTo_PersonInfo(){
-        this.$router.replace('/personInfo')
-      },
-      // OpenTalk(){
-      //   this.$alert('' , '查看消息', {
-      //     confirmButtonText: '关闭查看',
-      //     showCancelButton: false,
-      //     type: 'primary',
-      //     center: true,
-      //     dangerouslyUseHTMLString: true,
-      //     message:'<div style="height: 30px">团队邀请<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">1</span></div>' +
-      //       '<div style="height: 30px">文档评论<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">11</span></div>' +
-      //       '<div style="height: 30px">踢出团队<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">0</span></div>' +
-      //       '<div style="height: 30px">加入团队<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">2</span></div>'
-      //   }).then(() => {
-      //     this.$message({
-      //       type: 'success',
-      //       message: '已关闭查看!'
-      //     });
-      //   })
-      // }
+    goTo_PersonInfo(){
+      this.$router.replace('/personInfo')
+    },
+    link() {
+      this.$alert('这是一个链接', '复制以下链接分享', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'success',
+            message: `分享成功！`
+          });
+        }
+      });
+    },
+    newcomment() {
+      this.$prompt('请输入评论', '评论该文档', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        this.$message({
+          type: 'success',
+          message: '评论成功！'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消评论'
+        });
+      });
     }
   }
+}
 </script>
 
 <style scoped>
@@ -144,13 +151,14 @@
   line-height: 35px;
   font-size: 22px;
   overflow: visible;
+  padding: 20px;
+  margin-top: -10px;
 }
 
 .el-main {
   color: #333;
-  padding-top: 16px;
-  padding-left: 30px;
   background-color: #FFF;
+  padding:0px;
 }
 
 body > .el-container {
@@ -166,9 +174,8 @@ body > .el-container {
   line-height: 320px;
 }
 .choice{
-  font-size: 18px;
   display: block;
-  padding: 20px;
+  padding: 30px;
   border-bottom: #ebeef5 1px solid;
   border-right: #ebeef5 1px solid;
   color: #2c3e50;
@@ -177,7 +184,7 @@ body > .el-container {
   -webkit-transition-delay:0.01s;
 }
 .choice:hover{
-  font-size:20px ;
+  font-size:23px ;
   /*border-radius:10px;*/
 }
 .choice:last-child{
@@ -219,8 +226,8 @@ body{
   animation: diamond-shiny 1s infinite alternate;
   /*background-color: #AAD3FE;*/
   position: absolute;
-  left: -20px;
-  top: 40px;
+  left: 10px;
+  top: 10px;
 }
 @keyframes diamond-shiny {
   from {
@@ -399,16 +406,16 @@ body{
 }
 
 
-.person_wrap{
-  display: flex;
+.doc_info{
+  text-align: left;
+  position: relative;
+  left: -330px;
+  top:2px;
 }
-.search_warp{
-  margin-right: 30px;
+.doc_info>li{
+  margin-bottom: 8px;
+  display:inline-block;
 }
-.talk_wrap,.userInfo_wrap{
-  margin-right: 20px;
-}
-
 
 .content-wrap .content-description .description--inspiration {
   font-size: 0.8em;
@@ -419,19 +426,17 @@ body{
   text-decoration: none;
 }
 .search_warp .input-with-select{
-  width: 350px;
   /*background-color: #AAD3FE;*/
 }
 .input-with-select .el-input-group__prepend {
   background-color: #fff;
 }
-.el-dropdown {
-  vertical-align: top;
+.comment_list{
+  line-height: 25px;
 }
-.el-dropdown + .el-dropdown {
-  margin-left: 15px;
-}
-.el-icon-arrow-down {
-  font-size: 12px;
+.comment_list>li{
+  border-bottom: gainsboro 1px dotted;
+  border-left:gainsboro 1px dotted;
+  padding-left: 10px;
 }
 </style>

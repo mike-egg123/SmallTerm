@@ -16,6 +16,7 @@ import Joined from '../pages/Teampages/Joined'
 import Newdoc from '../pages/workplace/Newdoc'
 import Authorization from '../pages/Teampages/Authorization'
 import Authorization_no from '../pages/Teampages/Authorization_no'
+import Edit from '../pages/editpages/Edit'
 
 Vue.use(Router)
 
@@ -37,6 +38,10 @@ export default new Router({
     {
       path:'/personInfo',
       component:PersonInfo
+    },
+    {
+      path:'/edit',
+      component:Edit
     },
     {
       path:'/workplace',
@@ -101,11 +106,10 @@ export default new Router({
         },
         {
           path: 'newdoc',
-          name: 'Newdoc',
           component: Newdoc,
         },
         {
-          path:'',
+          path:'/',
           redirect:'newdoc'
         }
       ]

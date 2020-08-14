@@ -1,6 +1,8 @@
 <template>
   <div>
-    <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
+    <router-link to="/edit">
+      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
+    </router-link>
     <div style="padding: 20px;">
       <span>{{createItem.title}}</span>
       <div class="bottom clearfix">
@@ -47,13 +49,29 @@ export default {
         //调用收藏接口，修改数据库收藏列表
         const result=reqLikeornotArticle(this.userInfo.userid,this.createItem.articleid,true)
         //更新state中的收藏列表
-        this.getLikeList();
+        setTimeout(() => {
+          this.getLikeList();
+          //更新自己创建的文档列表
+          this.getCreateList()
+          //更新回收站列表
+          this.getGarbageList()
+          //更新浏览列表
+          this.getCurrentList()
+        },200)
       }
       else{//取消收藏
         //调用收藏接口，修改数据库收藏列表
         const result=reqLikeornotArticle(this.userInfo.userid,this.createItem.articleid,false)
         //更新state中的收藏列表
-        this.getLikeList();
+        setTimeout(() => {
+          this.getLikeList();
+          //更新自己创建的文档列表
+          this.getCreateList()
+          //更新回收站列表
+          this.getGarbageList()
+          //更新浏览列表
+          this.getCurrentList()
+        },200)
         console.log(this.likeList.length)
       }
     },
@@ -69,23 +87,20 @@ export default {
           message: '删除成功!'
         });
         //调用删除接口，删除文档，提交给数据库
-
         //从自己的创建文档列表删除
         const result=reqDeleteArticle(this.createItem.articleid)
-        //更新创建文档列表
-        this.getCreateList()
-        //如果收藏，从收藏列表中删除
-        if(this.createItem.islike){
-          reqLikeornotArticle(this.userInfo.userid,this.createItem.articleid,false)
+        console.log(result)
+        setTimeout(() => {
+          //更新创建文档列表
+          this.getCreateList()
+          //如果收藏，从收藏列表中删除
           //更新state中的收藏列表
           this.getLikeList();
-        }
-        //添加到删除列表
-        //更新回收站列表
-        this.getGarbageList()
-        //更新浏览列表
-        this.getCurrentList()
-
+          //更新回收站列表
+          this.getGarbageList()
+          //更新浏览列表
+          this.getCurrentList()
+        },200)
       }).catch(() => {
         this.$message({
           type: 'info',

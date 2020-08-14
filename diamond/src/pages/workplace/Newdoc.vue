@@ -1,7 +1,7 @@
 <template>
     <div style="text-align: left;padding: 50px">
       <el-row>
-        创建新文档：<el-button type="primary">点击创建</el-button>
+        创建新文档：<el-button type="primary" @click="handleCreate">点击创建</el-button>
       </el-row>
       <br>
       <br>
@@ -24,7 +24,12 @@
 </template>
 <script>
   export default {
-    name: 'Newdoc'
+    name: 'Newdoc',
+    methods:{
+      handleCreate(){
+        this.$router.replace('/edit')
+      }
+    }
   }
 </script>
 

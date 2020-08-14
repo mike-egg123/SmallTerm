@@ -7,12 +7,12 @@
       </div>
     </diamond-header>
     <el-drawer :visible.sync="drawer" :direction="direction" >
-      <div style="font-size: 23px;margin-top: -50px;margin-bottom: 10px">xxx的团队</div>
-      <div style="text-align: right; margin-right: 30px"><el-button type="success" round size="mini" @click="invite">邀请新成员</el-button></div>
+      <div style="font-size: 23px;margin-bottom: 30px;margin-top: -10px">xxx的团队</div>
+      <div style="text-align: right; margin-right: 30px;margin-top: 10px"><el-button type="success" round size="mini" @click="invite">邀请新成员</el-button></div>
       <ul>
         <li v-for="(o, index) in 10" :key="o">
           <Member title="某个成员">
-            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>
+            <!-- <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button> -->
           </Member>
         </li>
       </ul>
@@ -50,142 +50,142 @@
   </div>
 </template>
 <script>
-  import DiamondHeader from '../../components/DiamondHeader'
-  import Member from '../../components/Member'
-  export default {
-    name: 'Joined',
-    components: {Member, DiamondHeader},
-    data() {
-      return {
-        drawer: false,
-        direction: 'rtl',
-        currentDate: new Date()
-      };
-    },
-    methods: {
-      handleDeleteMem(){},
-      handleDissolve() {
-        this.$confirm('此操作将退出该团队, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$router.back(),
-            this.$message({
-              type: 'success',
-              message: '退出成功!'
-            });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消退出'
-          });
-        });
-      },
-      invite() {
-        this.$prompt('请输入用户名', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-        }).then(({ value }) => {
+import DiamondHeader from '../../components/DiamondHeader'
+import Member from '../../components/Member'
+export default {
+  name: 'Joined',
+  components: {Member, DiamondHeader},
+  data() {
+    return {
+      drawer: false,
+      direction: 'rtl',
+      currentDate: new Date()
+    };
+  },
+  methods: {
+    handleDeleteMem(){},
+    handleDissolve() {
+      this.$confirm('此操作将退出该团队, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$router.back(),
           this.$message({
             type: 'success',
-            message: '你邀请的新成员是: ' + value
+            message: '退出成功!'
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
         });
-      },
-      goauthorization_no(){
-        this.$router.push('/workplace/team/authorization_no')
-      },
-    }
+      });
+    },
+    invite() {
+      this.$prompt('请输入用户名', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        this.$message({
+          type: 'success',
+          message: '你邀请的新成员是: ' + value
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      });
+    },
+    goauthorization_no(){
+      this.$router.push('/workplace/team/authorization_no')
+    },
   }
+}
 </script>
 <style>
-  .el-drawer.rtl {
-    overflow-y: scroll
-  }
-  .memdelete{
-    opacity:0;
-  }
-  li{
-    margin: 10px;
-  }
-  li:hover{
-    color: #409EFF;
-  }
-  li:hover .memdelete{
-    opacity: 1;
-  }
-  .time {
-    font-size: 13px;
-    color: #999;
-  }
+.el-drawer.rtl {
+  overflow-y: scroll
+}
+.memdelete{
+  opacity:0;
+}
+li{
+  margin: 10px;
+}
+li:hover{
+  color: #409EFF;
+}
+li:hover .memdelete{
+  opacity: 1;
+}
+.time {
+  font-size: 13px;
+  color: #999;
+}
 
-  .bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
 
-  .button {
-    padding: 0;
-    float: right;
-  }
+.button {
+  padding: 0;
+  float: right;
+}
 
-  .image {
-    width: 100%;
-    display: block;
-    margin-top: 8px;
-  }
+.image {
+  width: 100%;
+  display: block;
+  margin-top: 8px;
+}
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
 
-  .clearfix:after {
-    clear: both
-  }
-  .box {
-    width: 400px;
-  }
-  .top {
-    text-align: center;
-  }
+.clearfix:after {
+  clear: both
+}
+.box {
+  width: 400px;
+}
+.top {
+  text-align: center;
+}
 
-  .left {
-    float: left;
-    width: 60px;
-  }
+.left {
+  float: left;
+  width: 60px;
+}
 
-  .right {
-    float: right;
-    width: 60px;
-  }
+.right {
+  float: right;
+  width: 60px;
+}
 
-  .bottom {
-    clear: both;
-    text-align: center;
-  }
+.bottom {
+  clear: both;
+  text-align: center;
+}
 
-  /*.item {*/
-  /*  margin: 4px;*/
-  /*}*/
+/*.item {*/
+/*  margin: 4px;*/
+/*}*/
 
-  .left .el-tooltip__popper,
-  .right .el-tooltip__popper {
-    padding: 8px 10px;
-  }
-  .text {
-    /*font-size: 16px;*/
-    /*letter-spacing: 2px;*/
-  }
+.left .el-tooltip__popper,
+.right .el-tooltip__popper {
+  padding: 8px 10px;
+}
+.text {
+  /*font-size: 16px;*/
+  /*letter-spacing: 2px;*/
+}
 
-  .item {
-    margin-bottom: 18px;
-  }
+.item {
+  margin-bottom: 18px;
+}
 </style>

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
+    <router-link to="/edit">
+      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
+    </router-link>
     <div style="padding: 20px;">
       <span>{{garbageItem.title}}</span>
       <div class="bottom clearfix">
@@ -40,14 +42,17 @@ export default {
     handleGarbage(){
       //调用恢复接口
       reqRecoverArticle(this.garbageItem.articleid)
-      //更新回收站列表
-      this.getGarbageList()
-      //更新创建列表
-      this.getCreateList();
-      //更新收藏列表
-      this.getLikeList();
-      //更新浏览列表
-      this.getCurrentList();
+      setTimeout(() => {
+        //更新回收站列表
+        this.getGarbageList()
+        //更新创建列表
+        this.getCreateList()
+        //更新收藏列表
+        this.getLikeList()
+        //更新浏览列表
+        this.getCurrentList()
+      },200)
+
     },
     //彻底删除
     handleDelete(){
@@ -62,18 +67,18 @@ export default {
           message: '删除成功!'
         });
         //调用删除接口，删除文档，提交给数据库
-
         //从自己的创建文档列表删除
         const result=reqDeleteArticle(this.garbageItem.articleid)
-        //更新回收站列表
-        this.getGarbageList()
-        //更新创建列表
-        this.getCreateList();
-        //更新收藏列表
-        //reqLikeornotArticle(this.userInfo.userid,this.createItem.articleid,false)
-        this.getLikeList();
-        //更新浏览列表
-        this.getCurrentList();
+        setTimeout(() => {
+          //更新回收站列表
+          this.getGarbageList()
+          //更新创建列表
+          this.getCreateList()
+          //更新收藏列表
+          this.getLikeList()
+          //更新浏览列表
+          this.getCurrentList()
+        },200)
 
       }).catch(() => {
         this.$message({

@@ -15,9 +15,9 @@
         <li v-for="(member,index) in members">
           {{member.name}}
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <el-checkbox disabled>查看</el-checkbox>
-          <el-checkbox disabled>编辑</el-checkbox>
-          <el-checkbox disabled>分享</el-checkbox>
+          <el-checkbox disabled>0</el-checkbox>
+          <el-checkbox disabled>1</el-checkbox>
+          <el-checkbox disabled>2</el-checkbox>
         </li>
       </ul>
       <div style="margin-left: 400px">
@@ -27,37 +27,39 @@
   </div>
 </template>
 <script>
-  const aOptions = ['查看', '编辑','分享'];
-  export default {
-    name: 'Authorization_no',
-    data(){
-      return{
-        members:[
-          {id:1,name:'jack1'},
-          {id:2,name:'jack2'},
-          {id:3,name:'jack3'},
-          {id:4,name:'jack4'},
-        ],
-        // checkAll: false,
-        as: aOptions,
-        // isIndeterminate: true
-      }
-    },
-    methods:{
+const aOptions = ['查看', '编辑','分享'];
+export default {
+  name: 'Authorization_no',
+  data(){
+    return{
+      members:[
+        {id:1,name:'jack1'},
+        {id:2,name:'jack2'},
+        {id:3,name:'jack3'},
+        {id:4,name:'jack4'},
+      ],
+      // checkAll: false,
+      as: aOptions,
+      // isIndeterminate: true
     }
+  },
+  methods:{
   }
+}
 </script>
 
 <style scoped>
-  .box-card{
-    text-align: left;
-    height: 200px;
-    display: flex;
-  }
-  .memlist{
-    text-align: left;
-    padding: 20px;
-    line-height: 40px;
-    font-size: 20px;
-  }
+.box-card{
+  height: 200px;
+  display: flex;
+}
+.memlist{
+  text-align: left;
+  padding: 20px;
+  line-height: 40px;
+  font-size: 20px;
+}
+li{
+  margin-bottom: 10px;
+}
 </style>

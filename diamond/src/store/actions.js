@@ -13,7 +13,7 @@ export default {
     //登录成功，调用接口获取信息
     console.log("action1:")
     const userInfo=await reqGetStatus()
-    console.log(userInfo)
+    // console.log(userInfo)
     if(userInfo.status===0) {
       console.log(userInfo)
       commit(GET_USER_INFO, {userInfo})
