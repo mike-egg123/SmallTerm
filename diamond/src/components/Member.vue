@@ -1,40 +1,27 @@
 <template>
   <div>
     <div class="header_wrap">
-<!--      <div class="back">-->
-<!--        <i class="iconfont icon-fanhui1"></i>-->
-<!--        <el-link target="_blank" @click="$router.back()" class="act_back">返回</el-link>-->
-<!--      </div>-->
-      <slot name="left"></slot>
       <div class="project">
         {{title}}
       </div>
       <slot name="right"></slot>
-<!--      <div class="trick">-->
-<!--          已有账号？-->
-<!--          <el-link type="primary" class="act_login">登录</el-link>-->
-<!--      </div>-->
     </div>
-    <el-divider></el-divider>
   </div>
 </template>
-
 <script>
 export default {
-  name: 'DiamondHeader',
+  name: 'Member',
   props:{
     title:String
   }
 }
 </script>
 
-<style scoped rel="stylesheet">
+<style scoped>
 .header_wrap{
   /*background-color: #02a774;*/
   display: flex;
   width: 95%;
-  margin: 20px auto;
-
 }
 .iconfont{
   font-size: 23px;
@@ -49,10 +36,10 @@ export default {
 }
 .project {
   flex-grow:1;
-  font-size: 33px;
-  font-weight: bolder;
-  letter-spacing: 3px;
+  font-size: 16px;
+  font-weight: lighter;
   text-align: left;
+  margin:5px;
 }
 .trick{
   flex: 3;

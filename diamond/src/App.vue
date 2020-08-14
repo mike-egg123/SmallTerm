@@ -5,26 +5,29 @@
 </template>
 
 <script>
-import DiamondHeader from './components/DiamondHeader'
-import { Message } from 'element-ui'
+import {mapActions} from 'vuex'
 export default {
   name: 'App',
-  methods:{
-    handleClick(){
-      Message('弹出成功',{
-        showClose: true,
-        type: 'success',
-        duration: 1000
-      })
-
-    }
+  mounted () {
+    this.getUserInfo()
+    this.getCurrentList()
+    this.getLikeList()
+    this.getCreateList()
+    this.getGarbageList()
   },
-  // components:{
-  //   DiamondHeader
-  // }
+  methods:{
+    ...mapActions(['getUserInfo','getCurrentList','getLikeList','getCreateList','getGarbageList'])
+  }
 }
 </script>
 
 <style scoped rel="stylesheet">
-
+  #app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
 </style>

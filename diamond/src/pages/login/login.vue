@@ -3,7 +3,7 @@
     <DiamondHeader title="金刚石文档登录">
       <div class="back" slot="left">
         <i class="iconfont icon-fanhui1"></i>
-        <el-link target="_blank" @click="$router.back()" class="act_back">返回</el-link>
+        <el-link target="_blank" @click="$router.back()" class="act_back" :underline="false">返回</el-link>
       </div>
     </DiamondHeader>
     <form @submit.prevent="login" class="login_wrap">
@@ -32,6 +32,8 @@
 import {mapActions} from 'vuex'
 import AlertTip from '../../components/AlertTip'
 import DiamondHeader from '../../components/DiamondHeader'
+import {reqPwdLogin} from '../../api'
+
 export default {
   name: 'login',
   data() {
@@ -57,20 +59,47 @@ export default {
     changePassWordType() {
       this.showPassword = !this.showPassword
     },
-
+    alertOut(str){
+      this.showAlert = true
+      this.alertText = str
+    },
     // 发送登录信息
     async login() {
-      const {pwd,name}=this
+      const {name,pwd}=this
       // debugger
       if (!this.name) {
-        this.showAlert = true
-        this.alertText = '请输入用户名'
+        this.alertOut('请输入用户名')
         return
       } else if (!this.pwd) {
-        this.showAlert = true;
-        this.alertText = '请输入密码'
+        this.alertOut('请输入密码')
         return
       }
+      console.log(name)
+      console.log(pwd)
+      // try {
+        const result = await reqPwdLogin(name, pwd)
+      // }catch (e) {
+        console.log("result:")
+        console.log(result)
+        console.log(result.status)
+        if (result.status === 0) {
+          //成功
+          console.log('login测试1：')
+          console.log(result)
+          //存储用户
+          this.recordUserInfo(result)
+          //跳转页面
+          this.$router.replace('/workplace')
+        } else {
+          //失败
+          console.log('login测试失败：')
+          console.log(result)
+          console.log(result.status)
+          this.alertOut('用户名或者密码不正确，请重新登录！')
+          this.pwd = ''
+          this.name = ''
+        }
+      // }
     },
     // 关系提示框
     closeTip() {
@@ -117,9 +146,10 @@ export default {
     height:20px;
     line-height:16px;
     color:#fff;
-    position:absolute;
-    top:53.5%;
-    right:450px;
+    position: absolute;
+    top:60.5%;
+    right:35%;
+
     transform:translateY(-50%);
   }
   .off{
