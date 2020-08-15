@@ -1,5 +1,6 @@
 <template>
   <div>
+    文档标题：<input v-model="title">
     <vue-ueditor-wrap v-model="content" :config='myConfig'>
       <VueUeditorWrap/>
     </vue-ueditor-wrap>
@@ -12,6 +13,7 @@
 
 <script>
 import VueUeditorWrap from 'vue-ueditor-wrap'
+import {mapActions,mapState} from 'vuex'
 import { reqStore, reqCreate, reqFetch, reqUpdate } from '../../api'
 
 export default {
@@ -21,11 +23,13 @@ export default {
   },
   data () {
   return {
-    userid: "37",//
-    title: "rcyTest",//
+    result:"",
+    userid: "37",
+    title: "默认标题(可修改)",//
+    author:"",
     permission: 0,//
-    articleid: "37",//
-    content: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>默认文本</h2>',
+    articleid: this.$route.params.articleid,//test:26
+    content: '',//'<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>默认文本</h2>',
     myConfig: {
       // 编辑器不自动被内容撑高
       autoHeightEnabled: false,
@@ -39,27 +43,46 @@ export default {
       UEDITOR_HOME_URL: '/static/UEditor/'
     }
   }},
+  computed:{
+    ...mapState(['userInfo'])
+  },
   methods: {
+    ...mapActions(['getUserInfo']),
     //创建新文档
     async create () {
       const {userid,title,content,permission} = this
       const result = await reqCreate(userid,title,content,permission)
-      this.articleid = result.articleid
-      console.log(result)
-    },
-    //读取文档
-    async fresh () {
-      const {userid,articleid} = this
-      const result = await reqFetch(userid,articleid)
-      this.content = result.content
-      //console.log(this.articleid + ": " + this.content)
+      console.log(result)     
     },
     //编辑文档并提交
     async change() {
       const {articleid,userid,title,content,permission} = this
       const result = await reqUpdate(articleid,userid,title,content,permission)
-      //console.log(result)
-    }
+      console.log("One update to: " + this.articleid)
+    },
+    //读取文档，注意调用关系，因此需要放在change之后
+    async fresh () {
+      const {articleid,userid} = this
+      const result = await reqFetch(articleid,userid)
+      this.content = result.content
+      console.log(result)
+      console.log("Editor loaded")
+      console.log(this.content)
+      //this.change()
+    },    
+  },
+  async created () {
+    //this.fresh()
+  },
+  mounted () {
+    //this.fresh()
+  },
+  beforeDestroy () {
+    this.change()
+  },
+  destroyed() {
+    //clearInterval(this.timer)
+    this.change()
   }
 }
 </script>

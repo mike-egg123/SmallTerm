@@ -57,3 +57,17 @@ export const reqFetch = (articleid,userid) => ajax('/apis/article/get',{
 export const reqUpdate = (articleid,userid,title,content,permission) => ajax('/apis/article/update',{
   articleid,userid,title,content,permission
 },'POST')
+
+/*
+获取评论
+ */
+export const reqGetComment = (articleid) => ajax('/apis/comment/getbyarticleid',{
+  articleid
+},'POST')
+
+/*
+发表评论
+ */
+export const reqAddComment = (articleid,userid,content) => ajax('apis/comment/post',{
+  articleid,userid,content
+},'POST')

@@ -17,6 +17,7 @@ import Newdoc from '../pages/workplace/Newdoc'
 import Authorization from '../pages/Teampages/Authorization'
 import Authorization_no from '../pages/Teampages/Authorization_no'
 import Edit from '../pages/editpages/Edit'
+import Test from '../pages/Editor/Test'
 
 Vue.use(Router)
 
@@ -40,9 +41,9 @@ export default new Router({
       component:PersonInfo
     },
     {
-      path:'/edit',
+      path:'/edit/:articleid',
       component:Edit
-    },
+    },,
     {
       path:'/workplace',
       name:'Workplace',

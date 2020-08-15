@@ -15,6 +15,7 @@
     "element-ui": "^2.13.2",
     "serve": "^11.3.2",
     "vue": "^2.5.2",
+    "vue-clipboard2": "^0.3.1",
     "vue-router": "^3.0.1",
     "vue-ueditor-wrap": "^2.4.4"
   },
