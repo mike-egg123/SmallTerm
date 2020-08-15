@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import Login from '../pages/login/login'
 import Register from '../pages/register/register'
 import Welcome from "../pages/Welcome";
@@ -13,14 +13,13 @@ import Team from '../pages/workplace/Team'
 import Teamboth from '../pages/Teampages/Teamboth'
 import Created from '../pages/Teampages/Created'
 import Joined from '../pages/Teampages/Joined'
-import Newdoc from '../pages/workplace/Newdoc'
-import Authorization from '../pages/Teampages/Authorization'
-import Authorization_no from '../pages/Teampages/Authorization_no'
 import Edit from '../pages/editpages/Edit'
+import Notice from '../pages/Notice/Notice'
+import SearchResult from '../pages/workplace/SearchResult'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+export default new VueRouter({
   routes: [
     {
       path: '/login',
@@ -42,6 +41,10 @@ export default new Router({
     {
       path:'/edit',
       component:Edit
+    },
+    {
+      path:'/notice',
+      component:Notice
     },
     {
       path:'/workplace',
@@ -69,20 +72,15 @@ export default new Router({
           component: Star
         },
         {
+          path: 'searchresult',
+          name: 'SearchResult',
+          component: SearchResult
+        },
+        {
           path: 'team',
           name: 'Team',
           component: Team,
           children:[
-            {
-              path: 'authorization',
-              name: 'Authorization',
-              component: Authorization
-            },
-            {
-              path: 'authorization_no',
-              name: 'Authorization_no',
-              component: Authorization_no
-            },
             {
               path: 'teamboth',
               name: 'Teamboth',
@@ -105,12 +103,8 @@ export default new Router({
           ]
         },
         {
-          path: 'newdoc',
-          component: Newdoc,
-        },
-        {
           path:'/',
-          redirect:'newdoc'
+          redirect:'recent'
         }
       ]
     },

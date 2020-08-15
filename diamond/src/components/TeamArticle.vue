@@ -1,19 +1,17 @@
 <template>
   <div>
-    <router-link to="/edit">
     <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
-    </router-link>
     <div style="padding: 20px;">
-      <span style="display: inline-block; white-space: nowrap; width: 100%; overflow: hidden; text-overflow:ellipsis;">{{currentItem.title}}</span>
+      <span>{{teamArticleItem.title}}</span>
       <div class="bottom clearfix">
-        <time class="time">修改时间</time>
+        <time class="time">{{ currentDate }}</time>
         <br>
         <br>
-        <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start" v-if="!currentItem.islike">
-          <el-button type="warning" plain icon="el-icon-star-off" circle @click="handleCurrent" size="mini"></el-button>
+        <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start" v-if="!teamArticleItem.islike">
+          <el-button type="warning" plain icon="el-icon-star-off" circle @click="handleTeamArticle" size="mini"></el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="取消收藏" placement="bottom-start" v-else>
-          <el-button type="warning" icon="el-icon-star-off" circle @click="handleCurrent" size="mini"></el-button>
+          <el-button type="warning" icon="el-icon-star-off" circle @click="handleTeamArticle" size="mini"></el-button>
         </el-tooltip>
       </div>
     </div>
@@ -24,23 +22,29 @@
 import {mapActions,mapState} from 'vuex'
 import {reqLikeornotArticle} from '../api'
 export default {
-  name: "CurrentArticle",
+  name: 'TeamArticle',
+  data:function (){
+    return{
+      currentDate: new Date(),
+    }
+  },
   props:{
-    currentItem:Object,
+    teamArticleItem:Object
   },
   computed:{
     ...mapState(['userInfo','likeList'])
   },
   mounted () {
-    this.recordCurrentList()
+    this.recordLikeList()
   },
   methods:{
-    ...mapActions(['getLikeList','getGarbageList','getCreateList','getCurrentList','recordCurrentList']),
-    handleCurrent(){
-      this.currentItem.islike=!this.currentItem.islike
-      if(this.currentItem.islike){//收藏
+    ...mapActions(['getLikeList','getGarbageList','getCreateList','getCurrentList','recordLikeList']),
+    handleTeamArticle(){
+      this.teamArticleItem.islike=!this.teamArticleItem.islike
+      if(this.teamArticleItem.islike){//收藏
         //调用收藏接口，修改数据库收藏列表
-        const result=reqLikeornotArticle(this.userInfo.userid,this.currentItem.articleid,true)
+        console.log(this.teamArticleList.length)
+        const result=reqLikeornotArticle(this.userInfo.userid,this.teamArticleItem.articleid,true)
         //更新state中的收藏列表
         setTimeout(() => {
           this.getLikeList()
@@ -52,13 +56,14 @@ export default {
           this.getCurrentList()
         },500)
 
+        console.log(this.teamArticleItem.length)
       }
       else{//取消收藏
         //调用收藏接口，修改数据库收藏列表
-        const result=reqLikeornotArticle(this.userInfo.userid,this.currentItem.articleid,false)
+        const result=reqLikeornotArticle(this.userInfo.userid,this.teamArticleItem.articleid,false)
         //更新state中的收藏列表
         setTimeout(() => {
-          this.getLikeList()
+          this.getLikeList();
           //更新回收站列表
           this.getGarbageList()
           //更新创建列表
@@ -66,7 +71,7 @@ export default {
           //更新浏览列表
           this.getCurrentList()
         },500)
-        console.log(this.likeList.length)
+        console.log(this.teamArticleItem.length)
       }
     }
   }
@@ -103,6 +108,27 @@ export default {
 
 .clearfix:after {
   clear: both
+}
+.box {
+  width: 400px;
+}
+.top {
+  text-align: center;
+}
+
+.left {
+  float: left;
+  width: 60px;
+}
+
+.right {
+  float: right;
+  width: 60px;
+}
+
+.bottom {
+  clear: both;
+  text-align: center;
 }
 
 </style>

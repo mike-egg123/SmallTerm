@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="4" v-for="(likeItem, index) in likeList" :key="index" :offset="index%4==0?0:2">
-        <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
+      <el-col :span="3" v-for="(likeItem, index) in likeList" :key="index" :offset="index%6==0?0:1">
+        <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 10px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
           <LikeArticle :likeItem="likeItem"/>
         </el-card>
       </el-col>
@@ -15,13 +15,13 @@
   export default {
     name: 'Star',
     mounted () {
-      this.getLikeList()
+      this.recordLikeList()
     },
     computed:{
       ...mapState(['likeList'])
     },
     methods:{
-      ...mapActions(['getLikeList'])
+      ...mapActions(['recordLikeList'])
     },
     components:{LikeArticle}
   }

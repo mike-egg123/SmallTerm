@@ -2,19 +2,19 @@
   <div>
     <br>
     <br>
-    <div class="teamclass"><i class="el-icon-suitcase-1"></i>&nbsp;我创建的团队</div>
+    <div class="teamclass"><i class="el-icon-suitcase-1"></i>&nbsp;我创建的团队<el-button type="primary" @click="handleCreateNewTeam" round size="mini" style="float: right;vertical-align: center;margin-right: 20px;margin-top: -5px">创建新团队</el-button></div>
     <hr>
     <br>
     <el-row>
-      <el-col :span="10" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+      <el-col :span="10" v-for="(myCreateTeamItem, index) in myCreateTeamList" :key="index" :offset="index%2==0?0:2" style="margin-bottom: 30px">
         <el-card class="box-card" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>团队名称</span>
-            <el-button style="padding: 3px 0;margin-left: 300px" type="text" @click="gocreated">查看团队</el-button>
+            <span>{{myCreateTeamItem.teamname}}</span>
+            <el-button style="padding: 3px 0;margin-left: 240px" type="text" @click="gojoined(myCreateTeamItem)">查看团队</el-button>
           </div>
-          <div class="text item">创建者:xxx</div>
-          <div class="text item">创建时间:2020/8/11 20:00</div>
-          <div class="text item">团队文档数:1</div>
+          <div class="text item">创建者:{{ myCreateTeamItem.creator }}</div>
+          <div class="text item">创建时间:{{ myCreateTeamItem.createtime }}</div>
+          <div class="text item">团队文档数:{{ myCreateTeamItem.tnum }}</div>
         </el-card>
       </el-col>
     </el-row>
@@ -24,29 +24,77 @@
     <hr>
     <br>
     <el-row>
-      <el-col :span="10" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+      <el-col :span="10" v-for="(myTeamItem, index) in myTeamList" :key="index" :offset="index%2==0?0:2" style="margin-bottom: 30px">
         <el-card class="box-card" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>团队名称</span>
-            <el-button style="padding: 3px 0;margin-left: 300px" type="text" @click="gojoined">查看团队</el-button>
+            <span>{{myTeamItem.teamname}}</span>
+            <el-button style="padding: 3px 0;margin-left: 240px" type="text" @click="gojoined(myTeamItem)">查看团队</el-button>
           </div>
-          <div class="text item">创建者:xxx</div>
-          <div class="text item">创建时间:2020/8/11 20:00</div>
-          <div class="text item">团队文档数:1</div>
+          <div class="text item">创建者:{{ myTeamItem.creator }}</div>
+          <div class="text item">创建时间:{{ myTeamItem.createtime }}</div>
+          <div class="text item">团队文档数:{{ myTeamItem.tnum }}</div>
         </el-card>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
+import {mapState,mapActions} from 'vuex'
+import {reqCreateTeam} from '../../api'
 export default {
   name: 'Teamboth',
+  mounted () {
+    this.recordMyCreateTeam()
+    this.recordMyTeam() //同步，获取成功
+  },
+  computed:{
+    ...mapState(['userInfo','myTeamList','myCreateTeamList','checkTeamInfo'])
+  },
   methods:{
-    gocreated(){
+    ...mapActions(['getMyTeam','getMyCreateTeam','recordMyTeam','recordMyCreateTeam','recordUserInfo',
+    'getTeamInfo']),
+    //页面跳转
+    gocreated(myCreateTeamItem){
       this.$router.push('/workplace/team/created')
+      //传值，将要传给Join界面的值保存到state中
+      this.$store.dispatch('recordTeamInfo',myCreateTeamItem)
+      this.$store.dispatch('getTeamMemberInfo',myCreateTeamItem)
     },
-    gojoined(){
+    gojoined(myTeamItem){
       this.$router.push('/workplace/team/joined')
+      //传值，将要传给Join界面的值保存到state中
+      this.$store.dispatch('recordTeamInfo',myTeamItem)
+      this.$store.dispatch('getTeamMemberInfo',myTeamItem)
+      console.log('Teamboth 存储')
+      console.log(this.checkTeamInfo)
+    },
+    handleCreateNewTeam(){
+      this.$prompt('请输入团队名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        this.$message({
+          type: 'success',
+          message: '创建成功'
+        });
+        console.log(value)//value指的输入的团队名字
+        if(this.userInfo.userid) {
+          //我创建的团队列表增加一个团队
+          const result=reqCreateTeam(value, this.userInfo.userid)
+          this.getMyCreateTeam()
+          //重新获取创建团队列表
+          if(result.status===0) {
+            setTimeout(() => {
+              this.getMyCreateTeam()
+            }, 200)
+          }
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消创建'
+        });
+      });
     }
   }
 }

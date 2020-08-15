@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="header_wrap">
+      <slot name="left"></slot>
       <div class="project">
         {{title}}
       </div>

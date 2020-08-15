@@ -1,6 +1,6 @@
 <template>
   <div>
-    <diamond-header title="团队名称">
+    <diamond-header :title="checkTeamInfo.teamname">
       <div slot="right">
         <el-button type="danger" @click="handleDissolve" >解散团队</el-button>
         <el-button @click="drawer = true" type="warning" style="margin-left: 16px;">管理成员</el-button>
@@ -10,11 +10,12 @@
 
 
     <el-drawer :visible.sync="drawer" :direction="direction" :before-close="handleClose">
-      <div style="font-size: 23px;margin-bottom: 30px;margin-top: -10px">xxx的团队</div>
+      <div style="font-size: 23px;margin-bottom: 30px;margin-top: -10px">{{checkTeamInfo.creator}}的团队</div>
       <div style="text-align: right; margin-right: 30px;margin-top: 10px"><el-button type="success" round size="mini" @click="invite">邀请新成员</el-button></div>
       <ul>
-        <li v-for="(o, index) in 10" :key="o">
-          <Member title="某个成员">
+        <li v-for="(checkTeamMember, index) in checkTeamMemberList" :key="index">
+          <Member :title="checkTeamMember.username">
+            <el-avatar size="small" :src="checkTeamMember.avatar" slot="left"></el-avatar>
             <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>
           </Member>
         </li>
@@ -26,31 +27,14 @@
 
     <el-row>
       <el-col style="text-align: left;padding: 20px">
-        <div class="text item">创建者:xxx</div>
-        <div class="text item">创建时间:2020/8/11 20:00</div>
-        <div class="text item">团队文档数:1</div>
+        <div class="text item">创建者:{{checkTeamInfo.creator}}</div>
+        <div class="text item">创建时间:{{checkTeamInfo.createtime}}</div>
+        <div class="text item">团队文档数:{{checkTeamInfo.tnum}}</div>
       </el-col>
       <hr>
-      <el-col :span="4" v-for="(o, index) in 4" :key="o" :offset="index > 0 ? 2 : 0">
+      <el-col :span="3" v-for="(teamArticleItem, index) in teamArticleList" :key="index" :offset="index%5==0?0:1">
         <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
-          <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
-          <div style="padding: 20px;">
-            <span>好吃的汉堡</span>
-            <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
-              <br>
-              <br>
-              <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start">
-                <el-button icon="el-icon-star-off" circle></el-button>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="删除" placement="bottom-start">
-                <el-button type="danger" icon="el-icon-delete" circle></el-button>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="管理权限" placement="bottom-start">
-                <el-button type="primary" icon="el-icon-more-outline" circle @click="goauthorization"></el-button>
-              </el-tooltip>
-            </div>
-          </div>
+          <TeamArticle :teamArticleItem="teamArticleItem"/>
         </el-card>
       </el-col>
     </el-row>
@@ -59,9 +43,12 @@
 <script>
 import DiamondHeader from '../../components/DiamondHeader'
 import Member from '../../components/Member'
+import TeamArticle from '../../components/TeamArticle'
+import {mapState,mapActions} from 'vuex'
+import {reqExitTeam} from '../../api'
 export default {
   name: 'Created',
-  components: {Member, DiamondHeader},
+  components: {Member, DiamondHeader,TeamArticle},
   data() {
     return {
       drawer: false,
@@ -69,7 +56,22 @@ export default {
       currentDate: new Date()
     };
   },
+  created(){
+    setTimeout(() => {
+      if (window.localStorage.getItem("key_checkTeamInfo")) {
+        this.$store.replaceState(Object.assign({},
+          this.$store.state, JSON.parse(window.localStorage.getItem("key_checkTeamInfo"))))
+      }
+      window.addEventListener("beforeunload", () => {
+        window.localStorage.setItem("key_checkTeamInfo", JSON.stringify(this.$store.state))
+      })
+    },1500)
+  },
+  computed:{
+    ...mapState(['userInfo','checkTeamInfo','checkTeamMemberList','teamArticleList']),
+  },
   methods: {
+    ...mapActions(['getTeamArticle','getMyCreateTeam','getMyTeam','getTeamInfo','getTeamMemberInfo']),
     handleClose(done) {
       this.$confirm('管理完成！')
         .then(_ => {
@@ -131,9 +133,6 @@ export default {
         });
       });
     },
-    goauthorization(){
-      this.$router.push('/workplace/team/authorization')
-    },
   }
 }
 </script>
@@ -147,6 +146,8 @@ export default {
 }
 li{
   margin: 10px;
+  padding: 5px;
+  vertical-align: center;
 }
 li:hover{
   color: #409EFF;

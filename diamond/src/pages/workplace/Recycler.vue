@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="4" v-for="(garbageItem, index) in garbageList" :key="index" :offset="index%4==0?0:2">
-        <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
+      <el-col :span="3" v-for="(garbageItem, index) in garbageList" :key="index" :offset="index%6==0?0:1">
+        <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 10px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
           <GarbageArticle :garbageItem="garbageItem"/>
         </el-card>
       </el-col>
@@ -15,14 +15,14 @@ import GarbageArticle from '../../components/GarbageArticle'
 export default {
   name: 'Recycler',
   mounted () {
-    this.getGarbageList()
+    this.recordGarbageList()
   },
 
   computed:{
     ...mapState(['garbageList'])
   },
   methods:{
-    ...mapActions(['getGarbageList']),
+    ...mapActions(['recordGarbageList']),
   },
   components:{GarbageArticle}
   }

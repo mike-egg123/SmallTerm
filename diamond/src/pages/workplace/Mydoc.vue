@@ -1,8 +1,8 @@
 <template>
     <div>
       <el-row>
-        <el-col :span="4" v-for="(createItem, index) in createList" :key="index" :offset="index%4==0?0:2">
-          <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
+        <el-col :span="3" v-for="(createItem, index) in createList" :key="index" :offset="index%6==0?0:1">
+          <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 10px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
             <CreateArticle :createItem="createItem" />
           </el-card>
         </el-col>
@@ -20,14 +20,14 @@
       };
     },
     mounted () {
-      this.getCreateList()
+      this.recordCreateList()
     },
 
     computed:{
       ...mapState(['createList'])
     },
     methods:{
-      ...mapActions(['getCreateList']),
+      ...mapActions(['recordCreateList']),
     },
     components: {CreateArticle},
   }

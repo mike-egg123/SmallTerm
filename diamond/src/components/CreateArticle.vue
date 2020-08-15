@@ -4,20 +4,20 @@
       <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
     </router-link>
     <div style="padding: 20px;">
-      <span>{{createItem.title}}</span>
+      <span  style="display: inline-block; white-space: nowrap; width: 100%; overflow: hidden; text-overflow:ellipsis;">{{createItem.title}}</span>
       <div class="bottom clearfix">
-        <time class="time">{{ currentDate }}</time>
+        <time class="time">这里放什么时间？</time>
         <br>
         <br>
         <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start" v-if="!createItem.islike">
-          <el-button type="warning" plain icon="el-icon-star-off" circle @click="handleLike"></el-button>
+          <el-button type="warning" plain icon="el-icon-star-off" circle @click="handleLike" size="mini"></el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="取消收藏" placement="bottom-start" v-else>
-          <el-button type="warning" icon="el-icon-star-off" circle @click="handleLike"></el-button>
+          <el-button type="warning" icon="el-icon-star-off" circle @click="handleLike" size="mini"></el-button>
         </el-tooltip>
 
         <el-tooltip class="item" effect="dark" content="删除" placement="bottom-start">
-          <el-button type="danger" icon="el-icon-delete" circle @click="handleGarbage"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle @click="handleGarbage" size="mini"></el-button>
         </el-tooltip>
       </div>
     </div>
@@ -40,8 +40,11 @@ export default {
   computed:{
     ...mapState(['userInfo','likeList'])
   },
+  mounted () {
+    this.recordCreateList()
+  },
   methods:{
-    ...mapActions(['getLikeList','getGarbageList','getCreateList','getCurrentList']),
+    ...mapActions(['getLikeList','getGarbageList','getCreateList','getCurrentList','recordCreateList']),
     //点击收藏按钮
     handleLike(){
       this.createItem.islike=!this.createItem.islike
@@ -57,7 +60,7 @@ export default {
           this.getGarbageList()
           //更新浏览列表
           this.getCurrentList()
-        },200)
+        },500)
       }
       else{//取消收藏
         //调用收藏接口，修改数据库收藏列表
@@ -71,7 +74,7 @@ export default {
           this.getGarbageList()
           //更新浏览列表
           this.getCurrentList()
-        },200)
+        },500)
         console.log(this.likeList.length)
       }
     },
@@ -100,7 +103,7 @@ export default {
           this.getGarbageList()
           //更新浏览列表
           this.getCurrentList()
-        },200)
+        },500)
       }).catch(() => {
         this.$message({
           type: 'info',
