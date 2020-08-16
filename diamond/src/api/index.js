@@ -64,16 +64,25 @@ export const reqUpdate = (articleid,userid,title,content,permission) => ajax('/a
 export const reqDeleteArticle = (articleid) => ajax('/apis/article/delete',{articleid},'POST')
 
 /*
+获取评论
+ */
+export const reqGetComment = (articleid) => ajax('/apis/comment/getbyarticleid',{
+  articleid
+},'POST')
+
+/*
 发表评论
  */
-export const reqCommentPost = (articleid,userid,content) => ajax('/apis/comment/post',{
+export const reqAddComment = (articleid,userid,content) => ajax('apis/comment/post',{
   articleid,userid,content
 },'POST')
 
 /*
-获取对某文档的所有评论
+释放互斥锁
  */
-export const reqGetAllComment = (articleid) => ajax('/apis/comment/getbyarticleid',{articleid},'POST')
+export const reqReleaseLock = (articleid) => ajax('apis/article/releaselock',{
+  articleid
+},'POST')
 
 /*
 恢复文档
@@ -199,3 +208,18 @@ export const reqTeamInfo = (teamid) => ajax('/apis/workplace/getteaminfo',{teami
 全局搜索用户
  */
 export const reqSearchUser = (keyword) => ajax('/apis/search/users',{keyword},'POST')
+
+/*
+全局搜索文档
+ */
+export const reqSearchDoc = (userid,keyword) => ajax('/apis/workplace/searchdoc',{userid,keyword},'POST')
+
+/*
+全局搜索团队
+ */
+export const reqSearchTeam = (userid,keyword) => ajax('/apis/workplace/searchteam',{userid,keyword},'POST')
+
+/*
+踢人
+ */
+export const reqOutTeam = (userid,teamid) => ajax('/apis/workplace/outteam',{userid,teamid},'POST')

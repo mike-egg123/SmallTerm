@@ -107,10 +107,10 @@
       }
     },
     computed:{
-      ...mapState(['userList'])
+      ...mapState(['userList','articleList','userInfo'])
     },
     methods:{
-      ...mapActions(['recordSearchUser','recordKeyword']),
+      ...mapActions(['recordSearchUser','recordKeyword','recordSearchDoc','recordTeamList']),
       goTo_PersonInfo(){
         this.$router.replace('/personInfo')
       },
@@ -122,10 +122,14 @@
       },
       goTo_SearchResult(){
         this.$router.replace('/workplace/searchresult')
+        //存储关键词
+        this.recordKeyword(this.input)
         //全局搜索用户
         this.recordSearchUser(this.input)
-        this.recordKeyword(this.input)
-
+        //全局搜索文档
+        this.recordSearchDoc(this.input)
+        //全局搜索团队
+        this.recordTeamList(this.input)
       },
       // OpenTalk(){
       //   this.$alert('' , '查看消息', {

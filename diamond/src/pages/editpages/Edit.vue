@@ -1,9 +1,9 @@
 <template>
   <div>
-    <DiamondHeader title="xxx.doc">
+    <DiamondHeader :title="article_title">
       <div class="back" slot="left">
         <i class="iconfont icon-fanhui1"></i>
-        <el-link target="_blank" @click="handleBack" class="act_back" :underline="false">返回</el-link>
+        <el-link target="_blank" @click="$router.back()" class="act_back">返回</el-link>
         <div class="content-wrap">
           <div class="content-card">
             <div class="diamond-wrap">
@@ -45,68 +45,125 @@
         </div>
       </div>
       <div class="doc_info" slot="middle">
-        <li>文档创建者&nbsp;:&nbsp;xxx</li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <li>所属团队&nbsp;:&nbsp;11111</li>
-        <br>
-        <li>创建时间&nbsp;:&nbsp;2020/8/11 20:00</li>&nbsp;&nbsp;&nbsp;&nbsp;
-        <li>修改时间&nbsp;:&nbsp;2020/8/12 20:00</li>&nbsp;&nbsp;
-        <li>文档大小&nbsp;:&nbsp;100kb</li>
+        文档创建者&nbsp;:&nbsp;<li>{{author}}</li>
+        创建时间&nbsp;:&nbsp;<li>{{formatDate(created_time)}}</li>&nbsp;&nbsp;
+        修改时间&nbsp;:&nbsp;<li>{{formatDate(updated_time)}}</li>&nbsp;&nbsp;
       </div>
       <div class="person_wrap" slot="right">
-        <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start"><el-button icon="el-icon-star-on" circle type="warning"></el-button></el-tooltip>
-        <el-tooltip class="item" effect="dark" content="分享" placement="bottom-start"><el-button icon="el-icon-share" circle type="primary" @click="link"></el-button></el-tooltip>
-        <el-tooltip class="item" effect="dark" content="添加评论" placement="bottom-start"><el-button icon="el-icon-chat-line-round" circle type="success" @click="newcomment"></el-button></el-tooltip>
+        <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start"><el-button icon="el-icon-star-on" circle type="warning" size="small"></el-button></el-tooltip>
+        <el-tooltip class="item" effect="dark" content="分享" placement="bottom-start"><el-button icon="el-icon-share" circle type="primary" @click="link" size="small"></el-button></el-tooltip>
+        <el-tooltip class="item" effect="dark" content="添加评论" placement="bottom-start"><el-button icon="el-icon-chat-line-round" circle type="success" @click="newcomment" size="small"></el-button></el-tooltip>
       </div>
     </DiamondHeader>
-    <el-container>
-      <el-aside width="78%">
-        <editor></editor>
+    <el-container style="margin: 0 100px">
+      <el-aside width="80%">
+        <editor ></editor>
       </el-aside>
       <el-main>
         <ul class="comment_list">
-          <li v-for="(comment,index) in comments" style="padding: 10px;">
-            <div style="text-align: left; font-size: 18px;font-weight: bold;padding-top: 5px;padding-bottom: 5px;color: #409EFF">{{comment.name}}</div>
+          <li v-for="(comment,index) in comments" v-if="index>=begin&&index<end" style="padding: 10px;">
+            <div style="text-align: left; font-size: 15px;color: #409EFF;vertical-align:center;vertical-align: middle;line-height: 20px"><el-avatar size="medium" :src="comment.avatar"></el-avatar>&nbsp;&nbsp;&nbsp;{{comment.username}}</div>
             <div style="text-align: left; padding-left: 10px;padding-top: 5px;padding-bottom: 5px">&nbsp;&nbsp;&nbsp;&nbsp;{{comment.content}}</div>
-            <div style="text-align: right;padding-top: 5px;">{{comment.time}}</div>
+            <div style="text-align: right;padding-top: 5px;">{{formatDate(comment.created)}}</div>
           </li>
         </ul>
+        <el-button type="primary" icon="el-icon-caret-left" @click="decrement"></el-button>
+        <el-button>第{{end/5}}页</el-button>
+        <el-button type="primary" icon="el-icon-caret-right" @click="increment"></el-button>
       </el-main>
     </el-container>
+    <el-button @click="releaseTest()" round type="primary">释放锁</el-button>
+    <el-button>外围框架读取成功：{{userInfo.avatar}}</el-button>
   </div>
 </template>
 <script>
 import DiamondHeader from '../../components/DiamondHeader'
 import Editor from '../Editor/Editor'
+import { reqGetComment,reqAddComment, reqFetch, reqUpdate, reqReleaseLock } from '../../api'
+import { mapGetters, mapActions, mapState } from 'vuex'
 export default {
   name: 'Edit',
   components: {Editor, DiamondHeader},
   data(){
     return{
-      comments:[
-        {id:1,name:'jack1',content:'这篇文章写的不错',time:'2020/8/13 15:00'},
-        {id:2,name:'jack2',content:'？？九折水瓶',time:'2020/8/13 15:01'},
-        {id:3,name:'jack3',content:'不会吧不会吧不会真的有人觉得他写的好吧这我接受不了的',time:'2020/8/13 15:02'},
-        {id:4,name:'jack4',content:'啊这...',time:'2020/8/13 15:03'},
-      ],
+      comments:[],
       select:false,
       input:'',
-      info_count:1
+      articleid:this.$route.params.articleid,
+      userid: this.userInfo.userid,
+      author:"",
+      created_time:"",
+      updated_time:"",
+      invitelink:"",
+      title:"",
+      props: { multiple: true },
+      options: [
+        {
+          value: 1,
+          label: '仅自己可见',
+        },
+        {
+          label: '团队可见',
+          children: [{
+            label: '团队1',
+          },
+            {
+              label: '团队2',
+            }]
+        },
+        {
+          label: '团队可见且可编辑',
+          children: [{
+            label: '团队1',
+          },
+            {
+              label: '团队2',
+            }]
+        },
+      ],
     }
   },
-  methods:{
-    handleBack(){
-      this.$router.replace('/workplace')
+  computed:{
+    article_title:function (){
+      return this.title+'.doc';
     },
+    ...mapGetters([//管理所有的事件
+      'begin',
+      'end',
+      'user'
+    ]),
+    ...mapState(['userInfo']),
+  },
+  methods:{
     goTo_PersonInfo(){
       this.$router.replace('/personInfo')
     },
+    ...mapActions([//获取页码
+      'increment',
+      'decrement',
+      'clickOdd',
+      'clickAsync',
+    ]),
+    ...mapActions(['getUserInfo']),
+    // onCopy: function (e) {
+    //   console.log('本文档链接为: ' + e.text)
+
+    // },
+    // onError: function (e) {
+    //   console.log('复制失败')
+    // },
     link() {
-      this.$alert('这是一个链接', '复制以下链接分享', {
-        confirmButtonText: '确定',
+      this.invitelink = location.href.replace(this.$route.path+this.$route.params,'');
+      this.$alert('请通过复制以下链接来分享文档'+this.invitelink , '分享', {
+        confirmButtonText: '复制链接',
         callback: action => {
+          this.$copyText(this.invitelink).then(
+            function(e) {
+              console.log('本文档链接为: ' + e.text)
+            })
           this.$message({
             type: 'success',
-            message: `分享成功！`
+            message: `链接已复制到剪贴板`
           });
         }
       });
@@ -116,17 +173,90 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '评论成功！'
-        });
+        if (value.length === 0 || value === null) {
+          alert("评论不能为空");
+        } else {
+          this.addComment(value);
+          this.$message({
+            type: 'success',
+            message: '评论成功！'
+          });
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '取消评论'
         });
       });
-    }
+    },
+    async addComment(value) {
+      const {articleid,userid} = this
+      const result3 = await reqAddComment(articleid,userid,value)
+      console.log(result3)
+      const result2 = await reqGetComment(articleid)
+      console.log(result2)
+      this.comments = result2
+    },
+    formatDate (date) {
+      Date.prototype.format = function(fmt) {
+        var o = {
+          "M+" : this.getMonth()+1,                 //月份
+          "d+" : this.getDate(),                    //日
+          "h+" : this.getHours(),                   //小时
+          "m+" : this.getMinutes(),                 //分
+          "s+" : this.getSeconds(),                 //秒
+          "q+" : Math.floor((this.getMonth()+3)/3), //季度
+          "S"  : this.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt)) {
+          fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+        }
+        for(var k in o) {
+          if(new RegExp("("+ k +")").test(fmt)){
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+          }
+        }
+        return fmt;
+      }
+      //假设输入的时间格式为YYYY-MM-DDTHH-mm-SS.sss
+      const s = String(date)
+      s.replace(/(\+d{2})(\d{2})$/, "$1:$2")
+      return new Date(s).format('yyyy-MM-dd hh:mm:ss')
+    },
+    //为了在外壳获取到文章信息，change一定要放在fresh之前
+    async change(result) {
+      const result2 = await reqUpdate(result.articleid,this.userid,result.title,
+        "6",result.permission)
+    },
+    async fresh() {
+      const {userid,articleid} = this
+      //初始化评论区（一定要先执行）
+      const Coms = await reqGetComment(articleid)
+      this.comments = Coms
+      //初始化文档信息
+      const result1 = await reqFetch(articleid,userid)
+      this.author = result1.author
+      this.title = result1.title
+      this.created_time = (result1.created_time)
+      this.updated_time = (result1.updated_time)
+      console.log("Edit loaded:")
+      console.log(result1)
+      //延时
+      // var time = 1000//延时执行，时间1000ms
+      // var startTime = new Date().getTime() + parseInt(time, 10);
+      // while(new Date().getTime() < startTime) {}
+      //释放锁，使得查看文档时再次获取
+      const res = await reqReleaseLock(articleid)
+      console.log("框架已释放互斥锁")
+    },
+    releaseTest() {
+      const {articleid} = this
+      const res = reqReleaseLock(articleid)
+      console.log("点击按钮后，已释放互斥锁")
+    },
+  },
+  async mounted () {
+    this.fresh()
   }
 }
 </script>
@@ -148,10 +278,10 @@ export default {
   border-right: none;
   color: #333;
   text-align: center;
-  line-height: 35px;
+  /*line-height: 35px;*/
   font-size: 22px;
   overflow: visible;
-  padding: 20px;
+  padding: 20px 60px;
   margin-top: -10px;
 }
 
@@ -159,6 +289,9 @@ export default {
   color: #333;
   background-color: #FFF;
   padding:0px;
+  line-height: 20px;
+  font-size: 13px;
+  margin-top: -20px;
 }
 
 body > .el-container {
@@ -409,8 +542,9 @@ body{
 .doc_info{
   text-align: left;
   position: relative;
-  left: -330px;
-  top:2px;
+  left: -10px;
+  top:10px;
+  font-size: 15px;
 }
 .doc_info>li{
   margin-bottom: 8px;
@@ -432,11 +566,20 @@ body{
   background-color: #fff;
 }
 .comment_list{
-  line-height: 25px;
+  line-height: 20px;
+  font-size: 13px;
 }
 .comment_list>li{
   border-bottom: gainsboro 1px dotted;
-  border-left:gainsboro 1px dotted;
   padding-left: 10px;
+}
+.article_title{
+  width: 30%;
+  /*margin: 0px auto;*/
+}
+.block{
+  position: relative;
+  left: 300px;
+  top:-40px;
 }
 </style>

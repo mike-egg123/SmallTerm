@@ -4,7 +4,7 @@
     <div style="padding: 20px;">
       <span>{{teamArticleItem.title}}</span>
       <div class="bottom clearfix">
-        <time class="time">{{ currentDate }}</time>
+        <time class="time">时间</time>
         <br>
         <br>
         <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start" v-if="!teamArticleItem.islike">
@@ -36,6 +36,10 @@ export default {
   },
   mounted () {
     this.recordLikeList()
+    if(this.checkTeamInfo){
+      console.log(this.checkTeamInfo)
+      this.getTeamArticle(this.checkTeamInfo)
+    }
   },
   methods:{
     ...mapActions(['getLikeList','getGarbageList','getCreateList','getCurrentList','recordLikeList']),
@@ -43,7 +47,7 @@ export default {
       this.teamArticleItem.islike=!this.teamArticleItem.islike
       if(this.teamArticleItem.islike){//收藏
         //调用收藏接口，修改数据库收藏列表
-        console.log(this.teamArticleList.length)
+        console.log(this.teamArticleItem)
         const result=reqLikeornotArticle(this.userInfo.userid,this.teamArticleItem.articleid,true)
         //更新state中的收藏列表
         setTimeout(() => {
@@ -55,8 +59,7 @@ export default {
           //更新浏览列表
           this.getCurrentList()
         },500)
-
-        console.log(this.teamArticleItem.length)
+        console.log(this.teamArticleItem)
       }
       else{//取消收藏
         //调用收藏接口，修改数据库收藏列表
@@ -71,7 +74,7 @@ export default {
           //更新浏览列表
           this.getCurrentList()
         },500)
-        console.log(this.teamArticleItem.length)
+        console.log(this.teamArticleItem)
       }
     }
   }

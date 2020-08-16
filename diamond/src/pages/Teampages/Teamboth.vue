@@ -9,8 +9,8 @@
       <el-col :span="10" v-for="(myCreateTeamItem, index) in myCreateTeamList" :key="index" :offset="index%2==0?0:2" style="margin-bottom: 30px">
         <el-card class="box-card" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>{{myCreateTeamItem.teamname}}</span>
-            <el-button style="padding: 3px 0;margin-left: 240px" type="text" @click="gojoined(myCreateTeamItem)">查看团队</el-button>
+            <span>{{myCreateTeamItem.teamname}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <el-button style="padding: 3px 0;margin-left: 240px" type="text" @click="gocreated(myCreateTeamItem)">查看团队</el-button>
           </div>
           <div class="text item">创建者:{{ myCreateTeamItem.creator }}</div>
           <div class="text item">创建时间:{{ myCreateTeamItem.createtime }}</div>

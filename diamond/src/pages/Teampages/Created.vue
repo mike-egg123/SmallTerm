@@ -16,7 +16,7 @@
         <li v-for="(checkTeamMember, index) in checkTeamMemberList" :key="index">
           <Member :title="checkTeamMember.username">
             <el-avatar size="small" :src="checkTeamMember.avatar" slot="left"></el-avatar>
-            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>
+            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem(checkTeamMember)" v-show="checkTeamMember.userid!=userInfo.userid">删除成员</el-button>
           </Member>
         </li>
       </ul>
@@ -29,7 +29,7 @@
       <el-col style="text-align: left;padding: 20px">
         <div class="text item">创建者:{{checkTeamInfo.creator}}</div>
         <div class="text item">创建时间:{{checkTeamInfo.createtime}}</div>
-        <div class="text item">团队文档数:{{checkTeamInfo.tnum}}</div>
+        <div class="text item">团队成员人数:{{checkTeamInfo.tnum}}</div>
       </el-col>
       <hr>
       <el-col :span="3" v-for="(teamArticleItem, index) in teamArticleList" :key="index" :offset="index%5==0?0:1">
@@ -45,7 +45,7 @@ import DiamondHeader from '../../components/DiamondHeader'
 import Member from '../../components/Member'
 import TeamArticle from '../../components/TeamArticle'
 import {mapState,mapActions} from 'vuex'
-import {reqExitTeam} from '../../api'
+import {reqDisband,reqOutTeam} from '../../api'
 export default {
   name: 'Created',
   components: {Member, DiamondHeader,TeamArticle},
@@ -55,17 +55,6 @@ export default {
       direction: 'rtl',
       currentDate: new Date()
     };
-  },
-  created(){
-    setTimeout(() => {
-      if (window.localStorage.getItem("key_checkTeamInfo")) {
-        this.$store.replaceState(Object.assign({},
-          this.$store.state, JSON.parse(window.localStorage.getItem("key_checkTeamInfo"))))
-      }
-      window.addEventListener("beforeunload", () => {
-        window.localStorage.setItem("key_checkTeamInfo", JSON.stringify(this.$store.state))
-      })
-    },1500)
   },
   computed:{
     ...mapState(['userInfo','checkTeamInfo','checkTeamMemberList','teamArticleList']),
@@ -93,6 +82,21 @@ export default {
             type: 'success',
             message: '解散成功!'
           });
+        //解散团队:teamid
+        if(this.checkTeamInfo) {
+          //我创建\加入的团队列表减少一个团队
+          const result=reqDisband(this.checkTeamInfo.teamid)
+          //重新获取创建团队列表
+          this.getMyCreateTeam()
+          //重新获取加入团队列表
+          this.getMyTeam()
+          if(result.status===0) {
+            setTimeout(() => {
+              this.getMyCreateTeam()
+              this.getMyTeam()
+            }, 200)
+          }
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -100,16 +104,26 @@ export default {
         });
       });
     },
-    handleDeleteMem() {
+    //删除团队成员reqOutTeam
+    handleDeleteMem(checkTeamMember) {
       this.$confirm('此操作将删除该成员, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
+      }).then(async () => {
         this.$message({
           type: 'success',
-          message: '删除成功!'
+          message: '已删除成员!'
         });
+        console.log(checkTeamMember)
+        //删除成员userid,teamid
+        const result=await reqOutTeam(checkTeamMember.userid,this.checkTeamInfo.teamid)
+        //重新刷成员列表
+        await this.getTeamMemberInfo(this.checkTeamInfo)
+        console.log(this.checkTeamMemberList)
+        if(result.status===0){
+          await this.getTeamMemberInfo(this.checkTeamInfo)
+        }
       }).catch(() => {
         this.$message({
           type: 'info',

@@ -13,7 +13,7 @@
         <li v-for="(checkTeamMember, index) in checkTeamMemberList" :key="index">
           <Member :title="checkTeamMember.username">
             <el-avatar size="small" :src="checkTeamMember.avatar" slot="left"></el-avatar>
-            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>
+<!--            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>-->
           </Member>
         </li>
       </ul>
@@ -22,7 +22,7 @@
       <el-col style="text-align: left;padding: 20px">
         <div class="text item">创建者:{{checkTeamInfo.creator}}</div>
         <div class="text item">创建时间:{{checkTeamInfo.createtime}}</div>
-        <div class="text item">团队文档数:{{checkTeamInfo.tnum}}</div>
+        <div class="text item">团队成员人数:{{checkTeamInfo.tnum}}</div>
       </el-col>
       <hr>
       <!--创建的文档-->
@@ -54,7 +54,6 @@ export default {
   },
   methods: {
     ...mapActions(['getTeamArticle','getMyCreateTeam','getMyTeam','getTeamInfo','getTeamMemberInfo']),
-    handleDeleteMem(){},
     handleDissolve() {
       this.$confirm('此操作将退出该团队, 是否继续?', '提示', {
         confirmButtonText: '确定',

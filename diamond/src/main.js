@@ -7,7 +7,8 @@ import store from './store'
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-
+import VueClipboard from 'vue-clipboard2'//复制到剪贴板
+Vue.use(VueClipboard)//复制到剪贴板
 Vue.use(ElementUI);
 Vue.config.productionTip=false
 

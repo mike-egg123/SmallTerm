@@ -13,4 +13,6 @@ export default {
   teamList:[],//全局搜索的团队列表
   articleList:[],//全局搜索的文档列表
   keyword:{},//全局搜索的关键词
+  front:0,//用于翻页
+  count:5,//用于翻页
 }

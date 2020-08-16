@@ -2,10 +2,12 @@ import {reqPwdLogout,reqGetStatus,reqGetAllCreateArticle,reqMyJoinTeam,
   reqGetRecentArticle,reqGetAllLikesArticle,reqGetGarbageArticle,
   reqMyCreateTeam,reqGetTeamMember,reqMyJoinTeamYi,reqGetAllArticles,
   reqGetRecentArticleYi,reqGetAllLikesArticleYi,reqGetAllCreateArticleYi,
-  reqGetGarbageArticleYi,reqMyCreateTeamYi,reqTeamInfo,reqSearchUser} from '../api'
+  reqGetGarbageArticleYi,reqMyCreateTeamYi,reqTeamInfo,reqSearchUser,reqSearchDoc,
+  reqSearchTeam} from '../api'
 import {GET_USER_INFO,USER_LOGOUT,GET_CURRENT_LIST,GET_LIKE_LIST,
   GET_CREATE_LIST,GET_GRABAGE_LIST,GET_MY_TEAM,GET_MY_CREATE_TEAM,RECORD_KEYWORD,
-  GET_CHECK_TEAM_INFO,GET_TEAM_MEMBER_INFO,GET_TEAM_ARTICLE,GET_SEARCH_USER_LIST} from './mutation-types'
+  GET_CHECK_TEAM_INFO,GET_TEAM_MEMBER_INFO,GET_TEAM_ARTICLE,GET_SEARCH_USER_LIST,
+  GET_SEARCH_ARTICLE_LIST,GET_SEARCH_TEAM_LIST} from './mutation-types'
 export default {
   //同步存储用户信息
   recordUserInfo ({commit}, userInfo) {
@@ -114,7 +116,21 @@ export default {
     const myCreateTeamList = await reqMyCreateTeam(state.userInfo.userid)
     commit(GET_MY_CREATE_TEAM, {myCreateTeamList})
   },
-
+  //用于翻页
+  increment:({commit})=> {
+    commit('increment');
+  },
+  decrement:({commit}) => {
+    commit('decrement');
+  },
+  clickAsync: ({commit}) => {
+    new Promise((resolve) => {
+      setTimeout(function(){
+        commit('increment');
+        resolve();
+      },1000);
+    })
+  },
 
   //---------------某个团队具体的信息-----------------
   //同步存储点击查看团队的信息
@@ -135,7 +151,6 @@ export default {
   async getTeamMemberInfo({commit},checkTeamInfo){
     if(checkTeamInfo) {
       const checkTeamMemberList = await reqGetTeamMember(checkTeamInfo.teamid)
-      console.log(checkTeamInfo)
       commit(GET_TEAM_MEMBER_INFO, {checkTeamMemberList})
     }
   },
@@ -155,9 +170,20 @@ export default {
   async recordKeyword({commit},keyword){
     commit(RECORD_KEYWORD,{keyword})
   },
+
   //全局搜索用户，存储用户列表
   async recordSearchUser({commit},keyword){
     const userList=await reqSearchUser(keyword)
     commit(GET_SEARCH_USER_LIST,{userList})
+  },
+  //全局搜索文档，存储文档列表
+  async recordSearchDoc({commit,state},keyword){
+    const articleList=await reqSearchDoc(state.userInfo.userid,keyword)
+    commit(GET_SEARCH_ARTICLE_LIST,{articleList})
+  },
+  //全局搜索团队，存储团队列表
+  async recordTeamList({commit,state},keyword){
+    const teamList=await reqSearchTeam(state.userInfo.userid,keyword)
+    commit(GET_SEARCH_TEAM_LIST,{teamList})
   }
 }

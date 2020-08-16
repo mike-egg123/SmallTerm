@@ -17,6 +17,7 @@ import Edit from '../pages/editpages/Edit'
 import Notice from '../pages/Notice/Notice'
 import SearchResult from '../pages/workplace/SearchResult'
 
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
