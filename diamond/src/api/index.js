@@ -71,3 +71,10 @@ export const reqGetComment = (articleid) => ajax('/apis/comment/getbyarticleid',
 export const reqAddComment = (articleid,userid,content) => ajax('apis/comment/post',{
   articleid,userid,content
 },'POST')
+
+/*
+释放互斥锁
+ */
+export const reqReleaseLock = (articleid) => ajax('apis/article/releaselock',{
+  articleid
+},'POST')

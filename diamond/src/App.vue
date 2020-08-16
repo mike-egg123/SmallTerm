@@ -6,6 +6,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+
 export default {
   name: 'App',
   mounted () {
@@ -13,7 +14,18 @@ export default {
   },
   methods:{
     ...mapActions(['getUserInfo'])
-  }
+  },
+  created(){
+  setTimeout(() => {
+    if (window.localStorage.getItem("key_data")) {
+      this.$store.replaceState(Object.assign({},
+        this.$store.state, JSON.parse(window.localStorage.getItem("key_data"))))
+    }
+    window.addEventListener("beforeunload", () => {
+      window.localStorage.setItem("key_data", JSON.stringify(this.$store.state))
+    })
+  },800)
+},
 }
 </script>
 

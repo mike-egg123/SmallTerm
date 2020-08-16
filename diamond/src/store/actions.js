@@ -24,5 +24,21 @@ export default {
     if(result.status===0){
       commit(USER_LOGOUT)
     }
-  }
+  },
+
+  //用于翻页
+  increment:({commit})=> {
+		commit('increment');
+	},
+	decrement:({commit}) => {
+		commit('decrement');
+	},
+	clickAsync: ({commit}) => {
+		new Promise((resolve) => {
+			setTimeout(function(){
+				commit('increment');
+				resolve();
+			},1000);
+		})
+	}
 }

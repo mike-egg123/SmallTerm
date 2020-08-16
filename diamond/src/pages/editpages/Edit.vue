@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DiamondHeader title="金刚石文档">
+    <DiamondHeader :title="article_title">
       <div class="back" slot="left">
         <i class="iconfont icon-fanhui1"></i>
         <el-link target="_blank" @click="$router.back()" class="act_back">返回</el-link>
@@ -44,41 +44,43 @@
           </div>
         </div>
       </div>
-      <div class="doc_info" slot="right">
+      <div class="doc_info" slot="middle">
         文档创建者&nbsp;:&nbsp;<li>{{author}}</li>
-        <br>
-        <br>
-        创建时间&nbsp;:&nbsp;<li>{{formatDate(created_time)}}</li>&nbsp;&nbsp;&nbsp;&nbsp;
-        <br>
-        <br>
+        创建时间&nbsp;:&nbsp;<li>{{formatDate(created_time)}}</li>&nbsp;&nbsp;
         修改时间&nbsp;:&nbsp;<li>{{formatDate(updated_time)}}</li>&nbsp;&nbsp;
       </div>
       <div class="person_wrap" slot="right">
-        <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start"><el-button icon="el-icon-star-on" circle type="warning"></el-button></el-tooltip>
-        <el-tooltip class="item" effect="dark" content="分享" placement="bottom-start"><el-button icon="el-icon-share" circle type="primary" @click="link"></el-button></el-tooltip>
-        <el-tooltip class="item" effect="dark" content="添加评论" placement="bottom-start"><el-button icon="el-icon-chat-line-round" circle type="success" @click="newcomment"></el-button></el-tooltip>      
+        <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start"><el-button icon="el-icon-star-on" circle type="warning" size="small"></el-button></el-tooltip>
+        <el-tooltip class="item" effect="dark" content="分享" placement="bottom-start"><el-button icon="el-icon-share" circle type="primary" @click="link" size="small"></el-button></el-tooltip>
+        <el-tooltip class="item" effect="dark" content="添加评论" placement="bottom-start"><el-button icon="el-icon-chat-line-round" circle type="success" @click="newcomment" size="small"></el-button></el-tooltip>
       </div>
     </DiamondHeader>
-    <el-container>
-      <el-aside width="78%">
+    <el-container style="margin: 0 100px">
+      <el-aside width="80%">
         <editor ></editor>
       </el-aside>
       <el-main>
         <ul class="comment_list">
-          <li v-for="(comment,index) in comments" style="padding: 10px;">
-            <div style="text-align: left; font-size: 18px;font-weight: bold;padding-top: 5px;padding-bottom: 5px;color: #409EFF">{{comment.username}}</div>
-            <div style="text-align: left; padding-left: 10px;padding-top: 5px;padding-bottom: 5px">{{comment.content}}</div>
+          <li v-for="(comment,index) in comments" v-if="index>=begin&&index<end" style="padding: 10px;">
+            <div style="text-align: left; font-size: 15px;color: #409EFF;vertical-align:center;vertical-align: middle;line-height: 20px"><el-avatar size="medium" :src="comment.avatar"></el-avatar>&nbsp;&nbsp;&nbsp;{{comment.username}}</div>
+            <div style="text-align: left; padding-left: 10px;padding-top: 5px;padding-bottom: 5px">&nbsp;&nbsp;&nbsp;&nbsp;{{comment.content}}</div>
             <div style="text-align: right;padding-top: 5px;">{{formatDate(comment.created)}}</div>
           </li>
         </ul>
+        <el-button type="primary" icon="el-icon-caret-left" @click="decrement"></el-button>
+        <el-button>第{{end/5}}页</el-button>
+        <el-button type="primary" icon="el-icon-caret-right" @click="increment"></el-button>
       </el-main>
     </el-container>
+    <el-button @click="releaseTest()" round type="primary">释放锁</el-button>
+    <el-button>外围框架读取成功：{{userInfo.avatar}}</el-button>
   </div>
 </template>
 <script>
   import DiamondHeader from '../../components/DiamondHeader'
   import Editor from '../Editor/Editor'
-  import { reqGetComment,reqAddComment, reqFetch, reqUpdate } from '../../api'
+  import { reqGetComment,reqAddComment, reqFetch, reqUpdate, reqReleaseLock } from '../../api'
+  import { mapGetters, mapActions, mapState } from 'vuex'
   export default {
     name: 'Edit',
     components: {Editor, DiamondHeader},
@@ -88,39 +90,81 @@
         select:false,
         input:'',
         articleid:this.$route.params.articleid,
-        userid:"37",//
+        userid: this.userInfo.userid,
         author:"",
         created_time:"",
         updated_time:"",
         invitelink:"",
+        title:"",
+        props: { multiple: true },
+        options: [
+          {
+            value: 1,
+            label: '仅自己可见',
+          },
+          {
+            label: '团队可见',
+            children: [{
+                label: '团队1',
+            },
+            {
+              label: '团队2',
+          }]
+        },
+          {
+            label: '团队可见且可编辑',
+            children: [{
+              label: '团队1',
+            },
+              {
+                label: '团队2',
+              }]
+          },
+        ],
       }
+    },
+    computed:{
+      article_title:function (){
+        return this.title+'.doc';
+      },
+      ...mapGetters([//管理所有的事件
+        'begin',
+        'end',
+        'user'
+      ]),
+      ...mapState(['userInfo']),
     },
     methods:{
       goTo_PersonInfo(){
         this.$router.replace('/personInfo')
       },
-      copyLink () {       
-        this.$copyText(this.invitelink).then(
-        function(e) {
-            console.log('复制链接为: ' + e.text)
-        })
-      },
-      onCopy: function (e) {
-        console.log('本文档链接为: ' + e.text)
-      },
-      onError: function (e) {
-        console.log('复制失败')
-      },
+      ...mapActions([//获取页码
+        'increment',
+        'decrement',
+        'clickOdd',
+        'clickAsync',
+      ]),
+      ...mapActions(['getUserInfo']),
+      // onCopy: function (e) {
+      //   console.log('本文档链接为: ' + e.text)
+
+      // },
+      // onError: function (e) {
+      //   console.log('复制失败')
+      // },
       link() {
         this.invitelink = location.href.replace(this.$route.path+this.$route.params,'');
-        this.$alert('请通过复制链接来分享文档'+this.invitelink , '分享', {
+        this.$alert('请通过复制以下链接来分享文档'+this.invitelink , '分享', {
           confirmButtonText: '复制链接',
           callback: action => {
-            this.copyLink();
+            this.$copyText(this.invitelink).then(
+            function(e) {
+                console.log('本文档链接为: ' + e.text)
+            })
             this.$message({
               type: 'success',
               message: `链接已复制到剪贴板`
-            });
+            });          
           }
         });
       },
@@ -137,7 +181,7 @@
               type: 'success',
               message: '评论成功！'
             });
-          }                 
+          }
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -152,27 +196,27 @@
         const result2 = await reqGetComment(articleid)
         console.log(result2)
         this.comments = result2
-      },     
+      },
       formatDate (date) {
-        Date.prototype.format = function(fmt) { 
-          var o = { 
-              "M+" : this.getMonth()+1,                 //月份 
-              "d+" : this.getDate(),                    //日 
-              "h+" : this.getHours(),                   //小时 
-              "m+" : this.getMinutes(),                 //分 
-              "s+" : this.getSeconds(),                 //秒 
-              "q+" : Math.floor((this.getMonth()+3)/3), //季度 
-              "S"  : this.getMilliseconds()             //毫秒 
-          }; 
+        Date.prototype.format = function(fmt) {
+          var o = {
+              "M+" : this.getMonth()+1,                 //月份
+              "d+" : this.getDate(),                    //日
+              "h+" : this.getHours(),                   //小时
+              "m+" : this.getMinutes(),                 //分
+              "s+" : this.getSeconds(),                 //秒
+              "q+" : Math.floor((this.getMonth()+3)/3), //季度
+              "S"  : this.getMilliseconds()             //毫秒
+          };
           if(/(y+)/.test(fmt)) {
-                  fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+                  fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
           }
           for(var k in o) {
               if(new RegExp("("+ k +")").test(fmt)){
                   fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
               }
           }
-          return fmt; 
+          return fmt;
         }
         //假设输入的时间格式为YYYY-MM-DDTHH-mm-SS.sss
         const s = String(date)
@@ -187,27 +231,32 @@
       async fresh() {
         const {userid,articleid} = this
         //初始化评论区（一定要先执行）
-        const CC = await reqGetComment(articleid)
-        console.log("comments: " + CC)
-        this.comments = CC
+        const Coms = await reqGetComment(articleid)
+        this.comments = Coms
         //初始化文档信息
         const result1 = await reqFetch(articleid,userid)
         this.author = result1.author
+        this.title = result1.title
         this.created_time = (result1.created_time)
         this.updated_time = (result1.updated_time)
         console.log("Edit loaded:")
         console.log(result1)
-        //提交一次，重新获取互斥锁
-        var time = 1000//延时执行，时间1000ms
-        var startTime = new Date().getTime() + parseInt(time, 10);
-        while(new Date().getTime() < startTime) {}
-        this.change(result1)
+        //延时
+        // var time = 1000//延时执行，时间1000ms
+        // var startTime = new Date().getTime() + parseInt(time, 10);
+        // while(new Date().getTime() < startTime) {}
+        //释放锁，使得查看文档时再次获取
+        const res = await reqReleaseLock(articleid)
+        console.log("框架已释放互斥锁")
+      },
+      releaseTest() {
+        const {articleid} = this
+        const res = reqReleaseLock(articleid)
+        console.log("点击按钮后，已释放互斥锁")
       },
     },
     async mounted () {
       this.fresh()
-      const {articleid} = this
-      
     }
   }
 </script>
@@ -229,10 +278,10 @@
     border-right: none;
     color: #333;
     text-align: center;
-    line-height: 35px;
+    /*line-height: 35px;*/
     font-size: 22px;
     overflow: visible;
-    padding: 20px;
+    padding: 20px 60px;
     margin-top: -10px;
   }
 
@@ -240,6 +289,9 @@
     color: #333;
     background-color: #FFF;
     padding:0px;
+    line-height: 20px;
+    font-size: 13px;
+    margin-top: -20px;
   }
 
   body > .el-container {
@@ -490,8 +542,9 @@
   .doc_info{
     text-align: left;
     position: relative;
-    left: -330px;
-    top:2px;
+    left: -10px;
+    top:10px;
+    font-size: 15px;
   }
   .doc_info>li{
     margin-bottom: 8px;
@@ -513,11 +566,20 @@
     background-color: #fff;
   }
   .comment_list{
-    line-height: 25px;
+    line-height: 20px;
+    font-size: 13px;
   }
   .comment_list>li{
     border-bottom: gainsboro 1px dotted;
-    border-left:gainsboro 1px dotted;
     padding-left: 10px;
+  }
+  .article_title{
+    width: 30%;
+    /*margin: 0px auto;*/
+  }
+  .block{
+    position: relative;
+    left: 300px;
+    top:-40px;
   }
 </style>
