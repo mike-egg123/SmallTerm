@@ -1,86 +1,101 @@
 <template>
-    <div>
-      <DiamondHeader title="个人工作台">
-        <div class="back" slot="left">
-          <i class="iconfont icon-fanhui1"></i>
-          <el-link target="_blank" @click="$router.back()" class="act_back">返回</el-link>
-          <div class="content-wrap">
-            <div class="content-card">
-              <div class="diamond-wrap">
-                <div class="diamond">
-                  <div class="diamond-side side--top">
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
-                    <div class="diamond-sharp"></div>
+  <div>
+    <DiamondHeader title="个人工作台">
+      <div class="back" slot="left">
+        <div class="content-wrap" style="overflow: visible">
+          <div class="content-card" style="overflow: visible">
+            <div class="diamond-wrap" style="overflow: visible">
+              <div class="diamond" style="overflow: visible">
+                <div class="diamond-side side--top">
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                  <div class="diamond-sharp"></div>
+                </div>
+                <div class="diamond-side side--bottom">
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
                   </div>
-                  <div class="diamond-side side--bottom">
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
-                    <div class="diamond-sharp">
-                      <div class="diamond-sharp--color"></div>
-                    </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
+                  </div>
+                  <div class="diamond-sharp">
+                    <div class="diamond-sharp--color"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="person_wrap" slot="right">
-          <div class="search_warp">
-            <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
-              <el-button slot="append" icon="iconfont icon-sousuo1"></el-button>
-            </el-input>
-          </div>
-          <div class="talk_wrap">
-            <el-badge :value="info_count" class="item">
-              <el-button icon="el-icon-bell" circle></el-button>
-            </el-badge>
-          </div>
-          <div class="userInfo_wrap">
-            <el-button icon="el-icon-user-solid" circle @click="goTo_PersonInfo"></el-button>
-          </div>
+      </div>
+      <div class="person_wrap" slot="right">
+        <div class="search_warp">
+          <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
+            <el-button slot="append" icon="iconfont icon-sousuo1" @click="goTo_SearchResult"></el-button>
+          </el-input>
         </div>
-      </DiamondHeader>
-      <el-container>
-        <el-aside width="20%">
-          <ul>
-            <router-link to="/workplace/newdoc" class="choice"><i class="el-icon-edit"></i>&nbsp;创建新文档</router-link>
-            <router-link to="/workplace/recent" class="choice"><i class="el-icon-timer"></i>&nbsp;最近浏览</router-link>
-            <router-link to="/workplace/star" class="choice"><i class="el-icon-star-off"></i>&nbsp;收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;藏</router-link>
-            <router-link to="/workplace/mydoc" class="choice"><i class="el-icon-document-copy"></i>&nbsp;我创建的</router-link>
-            <router-link to="/workplace/team" class="choice"><i class="el-icon-ship"></i>&nbsp;团&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;队</router-link>
-            <router-link to="/workplace/recycler" class="choice"><i class="el-icon-delete"></i>&nbsp;回&nbsp;收&nbsp;站</router-link>
-          </ul>
-        </el-aside>
-<!--        <el-aside width="1px" style="background-color: #9a9a9a" ></el-aside>-->
-        <el-main>
-          <router-view></router-view>
-<!--          <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>-->
-        </el-main>
-      </el-container>
-    </div>
+        <div class="talk_wrap">
+          <el-dropdown style="margin: auto">
+            <el-badge :value="info_count" class="item">
+              <el-button icon="el-icon-bell" circle type="info"  @click="goTo_Notice"></el-button>
+            </el-badge>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>团队邀请&nbsp;&nbsp;&nbsp;<el-badge class="mark" :value="3" style="margin-top: -5px"/></el-dropdown-item>
+              <el-dropdown-item>文档评论&nbsp;&nbsp;&nbsp;<el-badge class="mark" :value="3" style="margin-top: -5px" /></el-dropdown-item>
+              <el-dropdown-item>踢出/加入团队&nbsp;&nbsp;&nbsp;<el-badge class="mark" :value="3" style="margin-top: -5px" /></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        <div class="userInfo_wrap">
+          <el-button icon="el-icon-user-solid" circle @click="goTo_PersonInfo" type="primary"></el-button>
+        </div>
+      </div>
+    </DiamondHeader>
+    <el-container>
+      <el-aside width="15%">
+        <ul>
+          <router-link to="/workplace/recent" class="choice"><i class="el-icon-timer"></i>&nbsp;最近浏览</router-link>
+          <router-link to="/workplace/star" class="choice"><i class="el-icon-star-off"></i>&nbsp;收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;藏</router-link>
+          <router-link to="/workplace/mydoc" class="choice"><i class="el-icon-document-copy"></i>&nbsp;我创建的</router-link>
+          <router-link to="/workplace/team" class="choice"><i class="el-icon-ship"></i>&nbsp;团&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;队</router-link>
+          <router-link to="/workplace/recycler" class="choice"><i class="el-icon-delete"></i>&nbsp;回&nbsp;收&nbsp;站</router-link>
+        </ul>
+      </el-aside>
+      <!--        <el-aside width="1px" style="background-color: #9a9a9a" ></el-aside>-->
+      <el-main width="70%">
+        <router-view></router-view>
+        <!--          <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>-->
+      </el-main>
+      <el-aside width="15%" style="text-align: center">
+        <el-row>
+          <el-button @click="handleCreate" round size="medium" style="margin-bottom: 15px;margin-top: 15px">创建新文档</el-button>
+          <br>
+          <el-button type="primary" @click="handleCreateM" round size="medium">基于模板创建</el-button>
+          <br>
+<!--          <el-button type="primary" @click="handleCreateTeam" round size="medium">基于模板创建</el-button>-->
+        </el-row>
+      </el-aside>
+    </el-container>
+  </div>
 </template>
 <script>
   import DiamondHeader from '../../components/DiamondHeader'
+  import {mapState,mapActions, mapGetters} from 'vuex'
+  import { reqCreate } from '../../api'
   export default {
     name: 'Workplace',
     components: {DiamondHeader},
@@ -88,13 +103,69 @@
       return{
         select:false,
         input:'',
-        info_count:1
+        info_count:1,
+        msg1:'团队邀请'
       }
     },
+    computed:{
+      ...mapState(['userList','userInfo']),
+      ...mapGetters(['user'])
+    },
     methods:{
+      ...mapActions(['recordSearchUser','recordKeyword','getUserInfo']),
       goTo_PersonInfo(){
         this.$router.replace('/personInfo')
-      }
+      },
+      goTo_Notice(){
+        this.$router.replace('/notice')
+      },
+      async handleCreate(){//创建空文档，默认标题为'title'
+        var newid;
+        const createRes = await reqCreate("")
+        this.$message({
+          type:'success',
+          message:'创建成功'
+        })
+        newid = createRes.articleid
+        this.$router.replace('/edit/'+newid)
+      },
+      async handleCreateM(){//基于模板创建
+        var newid;
+        //str是个简历模板的html转js字符串的结果
+        var str = new String(['<h1 label="Title center" name="tc" style="border-bottom-color:#cccccc;border-bottom-width:2px;border-bottom-style:solid;padding:0px 4px 0px 0px;text-align:center;margin:0px 0px 20px;"><span style="color:#c0504d;">[在此键入标题]</span></h1><p style="text-align:center;"><strong>[在此键入副标题]</strong></p><h3><span class="ue_t" style="font-family:幼圆">[标题 1]</span></h3><p style="text-indent:2em;">在编辑器上方的功能栏中，您可以点击某个按钮实现文档的编辑功能，包括对格式、对文本字体的调节，上传声音、图片等。该编辑器功能丰富，可以满足您对于doc文档的大多数编辑需求，是一款比石墨文档更强大、比word更便于在线传输的编辑器。</p><h3><span class="ue_t" style="font-family:幼圆">[标题 2]</span></h3><p style="text-indent:2em;">如果您想使用其他模板，只需点击上方的&nbsp;<img src="http://35.201.165.105:8000/storage/image/20200817/1597628144301001.png" title="1597628144301001.png" _src="http://35.201.165.105:8000/storage/image/20200817/1597628144301001.png" alt="模板.png">&nbsp;按钮，预览并点击您喜欢的模板即可。</p><h3><span class="ue_t" style="font-family:幼圆">[标题 3]</span></h3><p>&#8203;&nbsp;&nbsp;&nbsp;&nbsp;&#8203;&nbsp;&nbsp;&nbsp;&nbsp;&#8203;<span style="text-indent: 32px;">您可以选择上传图片，并插入到文本中。只需点击“单图上传”或“多图上传”按钮，上传本地图片后，点击“确认”即可。</span></p><p class="ue_t"><br></p><p><br></p>'].join(""))
+        const createRes = await reqCreate(str)
+        this.$message({
+          type:'success',
+          message:'创建成功'
+        })
+        newid = createRes.articleid
+        this.$router.replace('/edit/'+newid)
+      },
+      goTo_SearchResult(){
+        this.$router.replace('/workplace/searchresult')
+        //全局搜索用户
+        this.recordSearchUser(this.input)
+        this.recordKeyword(this.input)
+
+      },
+      // OpenTalk(){
+      //   this.$alert('' , '查看消息', {
+      //     confirmButtonText: '关闭查看',
+      //     showCancelButton: false,
+      //     type: 'primary',
+      //     center: true,
+      //     dangerouslyUseHTMLString: true,
+      //     message:'<div style="height: 30px">团队邀请<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">1</span></div>' +
+      //       '<div style="height: 30px">文档评论<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">11</span></div>' +
+      //       '<div style="height: 30px">踢出团队<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">0</span></div>' +
+      //       '<div style="height: 30px">加入团队<span style="background-color: #F56C6C;color:#fff;display: inline-block;margin-left:10px;width: 24px;height: 24px;border-radius: 50%">2</span></div>'
+      //   }).then(() => {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '已关闭查看!'
+      //     });
+      //   })
+      // }
     }
   }
 </script>
@@ -141,17 +212,18 @@
     line-height: 320px;
   }
   .choice{
+    font-size: 16px;
     display: block;
-    padding: 30px;
+    padding: 10px;
     border-bottom: #ebeef5 1px solid;
     border-right: #ebeef5 1px solid;
     color: #2c3e50;
-    -webkit-transition-duration:0.2s;
+    -webkit-transition-duration:0.1s;
     -webkit-transition-timing-function:linear;
     -webkit-transition-delay:0.01s;
   }
   .choice:hover{
-    font-size:23px ;
+    font-size:17px ;
     /*border-radius:10px;*/
   }
   .choice:last-child{
@@ -193,8 +265,8 @@
     animation: diamond-shiny 1s infinite alternate;
     /*background-color: #AAD3FE;*/
     position: absolute;
-    left: 10px;
-    top: 10px;
+    left: -20px;
+    top: 40px;
   }
   @keyframes diamond-shiny {
     from {
@@ -398,5 +470,14 @@
   }
   .input-with-select .el-input-group__prepend {
     background-color: #fff;
+  }
+  .el-dropdown {
+    vertical-align: top;
+  }
+  .el-dropdown + .el-dropdown {
+    margin-left: 15px;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
   }
 </style>

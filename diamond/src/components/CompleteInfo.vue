@@ -23,38 +23,45 @@
     </div>
     <div class="Info_img">
       &nbsp;&nbsp;&nbsp;&nbsp;<div>上传头像</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <!-- 上传图片的加号卡片 -->
       <el-upload
         action="#"
         list-type="picture-card"
         :http-request="httpRequest"
         :before-upload="beforeUpload"
+        id="cardArea"
       >
+      
         <i slot="default" class="el-icon-plus"></i>
         <div slot="file" slot-scope="{file}" id="imgFile">
           <img
             class="el-upload-list__item-thumbnail"
             :src="file.url" alt=""
           >
+          <!-- 关于图片的预览、下载、删除功能 -->
           <span class="el-upload-list__item-actions">
-        <span
-          class="el-upload-list__item-preview"
-          @click="handlePictureCardPreview(file)"
-        >
-          <i class="el-icon-zoom-in"></i>
-        </span>
-        <span
-          v-if="!disabled"
-          class="el-upload-list__item-delete"
-          @click="handleDownload(file)"
-        >
-          <i class="el-icon-download"></i>
-        </span>
-        <span
-          v-if="!disabled"
-          class="el-upload-list__item-delete"
-          @click="handleRemove(file)"
-        >
-          <i class="el-icon-delete"></i>
+            <!-- 预览 -->
+            <span
+              class="el-upload-list__item-preview"
+              @click="handlePictureCardPreview(file)"
+            >
+            <i class="el-icon-zoom-in"></i>
+            </span>
+            <!-- 下载 -->
+            <span
+              v-if="!disabled"
+              class="el-upload-list__item-delete"
+              @click="handleDownload(file)"
+            >
+            <i class="el-icon-download"></i>
+            </span>
+            <!-- 删除 -->
+            <span
+              v-if="!disabled"
+              class="el-upload-list__item-delete"
+              @click="handleRemove(file)"
+            >
+            <i class="el-icon-delete"></i>
         </span>
       </span>
         </div>
@@ -67,7 +74,7 @@
   </form>
 </template>
 <script>
-
+// import $ from 'jquery'
 export default {
   name: 'CompleteInfo',
   props:{
@@ -91,17 +98,28 @@ export default {
   methods:{
     beforeUpload(file){
       this.file2=file
+      console.log("file2:")
       console.log(this.file2)
     },
-    handleRemove(file) {
+    handleRemove(file) {//
+      // var obj = document.getElementById("imgFile"); // 移除该标签对象
+      // alert(obj.innerHTML)
+      // obj.parentNode.removeChild(obj)
       console.log(file);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    handleDownload(file) {
+    handleDownload(file) {//
       console.log(file);
+      var img = document.getElementById('imgFile'); // 获取要下载的图片
+      var url = file.url;                           // 获取图片地址
+      var a = document.createElement('a');          // 创建一个a节点插入的document
+      var event = new MouseEvent('click')           // 模拟鼠标click点击事件
+      a.download = 'img'                            // 设置a节点的download属性值
+      a.href = url;                                 // 将图片的src赋值给a节点的href
+      a.dispatchEvent(event)                        // 触发鼠标点击事件
     },
     httpRequest(e) {
       this.file1 = e.file;

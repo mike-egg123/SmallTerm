@@ -3,7 +3,7 @@
     <DiamondHeader title="个人信息" style="width: 90%;margin: 10px auto">
       <div class="back" slot="left">
         <i class="iconfont icon-fanhui1"></i>
-        <el-link target="_blank" @click="goTo_Workplace" class="act_back" style="text-decoration:none">返回个人工作台</el-link>
+        <el-link target="_blank" @click="goTo_Workplace" class="act_back" style="text-decoration:none" :underline="false">返回个人工作台</el-link>
       </div>
       <div class="trick" slot="right" style="text-align: end">
         <el-dropdown trigger="click" style="outline: none" >
@@ -36,7 +36,7 @@
         <div class="personInfo_img_wrap">
           <img :src="userInfo.avatar" alt="暂无头像">
         </div>
-        <div class="personInfo_left_text">头 像</div>
+        <span class="personInfo_left_text">头 像</span>
       </div>
       <div class="personInfo_mid_wrap"></div>
 
@@ -69,7 +69,6 @@
 import DiamondHeader from '../../components/DiamondHeader'
 import {mapActions,mapState} from 'vuex'
 import {reqChange} from '../../api'
-
 export default {
   name: "PersonInfo",
   components:{
@@ -81,34 +80,38 @@ export default {
   data:function (){
     return{
       src:'',
+      file:{},
+      file1:{},
+      imgUrl:'',
+      showAvatar:true
     }
   },
   computed:{
     ...mapState(['userInfo'])
   },
-  methods:{
+  methods: {
     ...mapActions(['getUserInfo']),
-    goTo_Workplace(){
+    goTo_Workplace () {
       this.$router.replace('/workplace')
     },
-    AlertOpen(str,title,pattern,errors){
+    AlertOpen (str, title, pattern, errors) {
       this.$prompt(str, title, {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: pattern?pattern:'',
+        inputPattern: pattern ? pattern : '',
         // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-        inputErrorMessage: errors?errors:''
+        inputErrorMessage: errors ? errors : ''
       }).then(({value}) => {
         this.$message({
           type: 'success',
           message: title + '成功！'
         });
-        if(pattern){
+        if (pattern) {
           console.log('patten')
-          this.phone=value
+          this.phone = value
           console.log('PersonInfo!!!')
           // const avatar=this.userInfo.avatar
-          this.userInfo.phone=value
+          this.userInfo.phone = value
           let formData = new FormData()
           formData.append("userid", this.userInfo.userid)
           formData.append("phone", this.phone)
@@ -116,10 +119,9 @@ export default {
           formData.append("avatar", this.userInfo.avatar)
           //,this.userInfo.avatar.name
           reqChange(formData)
-        }
-        else{
-          this.bio=value
-          this.userInfo.bio=value
+        } else {
+          this.bio = value
+          this.userInfo.bio = value
           let formData = new FormData()
           formData.append("userid", this.userInfo.userid)
           formData.append("phone", this.userInfo.phone)
@@ -135,23 +137,23 @@ export default {
         });
       });
     },
-    ChangePhone(){
-      this.AlertOpen('请输入新手机号码','修改手机号码',/^1\d{10}$/,'输入手机号码格式不正确')
+    ChangePhone () {
+      this.AlertOpen('请输入新手机号码', '修改手机号码', /^1\d{10}$/, '输入手机号码格式不正确')
     },
-    ChangeIntro(){
-      this.AlertOpen('请输入新个人简介','修改个人简介')
+    ChangeIntro () {
+      this.AlertOpen('请输入新个人简介', '修改个人简介')
     },
-    logout(){
+    logout () {
       this.$confirm('确认退出吗?', '提示', {
         confirmButtonText: '退出',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.$message({
-          type: 'success',
-          message: '退出成功!'
-        },
-        this.$store.dispatch('logout')
+            type: 'success',
+            message: '退出成功!'
+          },
+          this.$store.dispatch('logout')
         );
         this.$router.replace('/welcome')
       }).catch(() => {
@@ -161,7 +163,7 @@ export default {
         });
       });
     }
-  },
+  }
 }
 </script>
 
@@ -188,9 +190,10 @@ export default {
     padding-top: 150px;
   }
   .personInfo_left_text{
+    display: inline-block;
     margin-top: 20px;
-    font-weight: bolder;
-    font-size: 19px;
+    font-weight: bold;
+    font-size: 18px;
     letter-spacing: 1px;
   }
 

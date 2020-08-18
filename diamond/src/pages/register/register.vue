@@ -3,7 +3,7 @@
     <DiamondHeader title="金刚石文档注册">
       <div class="back" slot="left">
         <i class="iconfont icon-fanhui1"></i>
-        <el-link target="_blank" @click="$router.back()" class="act_back">返回</el-link>
+        <el-link target="_blank" @click="$router.back()" class="act_back" :underline="false">返回</el-link>
       </div>
       <div class="trick" slot="right">
           已有账号？

@@ -1,2 +1,13 @@
 export const GET_USER_INFO = 'get_user_info' // 接收用户信息
 export const USER_LOGOUT = 'user_logout' //接收用户介绍
+export const GET_CURRENT_LIST='get_current_list'//获取最近浏览文档列表
+export const GET_LIKE_LIST='get_like_list' //获取收藏的文档列表
+export const GET_CREATE_LIST='get_create_list' //获取自己创建的文档列表
+export const GET_GRABAGE_LIST='get-garbage_list' //获取在垃圾桶的文档列表
+export const GET_MY_TEAM='get_my_team' //获取自己加入的所有团队
+export const GET_MY_CREATE_TEAM='get_my_create_team' //获取自己创建的所有团队
+export const GET_CHECK_TEAM_INFO='get_check_team_info' //获取进入查看的团的信息
+export const GET_TEAM_MEMBER_INFO='get_team_member_info' //获取查看的团队的成员信息
+export const GET_TEAM_ARTICLE='get_team_article' //获取某个团队的文档（权限）
+export const GET_SEARCH_USER_LIST='get_search_user_list' //全局搜索获取用户列表，并存储
+export const RECORD_KEYWORD='record_keyword' //存储搜索关键词

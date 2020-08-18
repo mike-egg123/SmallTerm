@@ -40,9 +40,33 @@ export const reqGet = (formData) => ajax('/apis/personality/get',formData,'POST'
 /*
 创建在线文档
  */
-export const reqCreate = (userid,title,content,permission) => ajax('/apis/article/create',{
-  userid,title,content,permission
+export const reqCreate = (content) => ajax('/apis/article/create',{content},'POST')
+
+/*
+查询权限
+ */
+export const reqGetPermission = (userid,articleid) => ajax('apis/workplace/getpermission',{
+  userid,articleid
 },'POST')
+
+/*
+查询权限设定
+ */
+export const reqGetPermissionSetting = (userid,articleid) => ajax('apis/workplace/getpermissionsetting',{
+  userid,articleid
+},'POST')
+
+/*
+修改权限
+ */
+export const reqSetPermission = (userid,state,articleid,teamlist) => ajax('apis/workplace/setpermission',{
+  userid,state,articleid,teamlist
+},'POST')
+
+/*
+获取加入的所有团队
+ */
+export const reqGetAllTeam = (userid) => ajax('apis/workplace/myallteam',{userid},'POST')
 
 /*
 查看文档
@@ -59,6 +83,11 @@ export const reqUpdate = (articleid,userid,title,content,permission) => ajax('/a
 },'POST')
 
 /*
+  删除文档
+ */
+export const reqDeleteArticle = (articleid) => ajax('/apis/article/delete',{articleid},'POST')
+
+/*
 获取评论
  */
 export const reqGetComment = (articleid) => ajax('/apis/comment/getbyarticleid',{
@@ -73,8 +102,140 @@ export const reqAddComment = (articleid,userid,content) => ajax('apis/comment/po
 },'POST')
 
 /*
+评论时向作者发消息
+ */
+export const reqCommentMessage = (articleid,userid) => ajax('apis/message/commentmessage',{
+  articleid,userid
+},'POST')
+
+/*
 释放互斥锁
  */
 export const reqReleaseLock = (articleid) => ajax('apis/article/releaselock',{
   articleid
 },'POST')
+
+/*
+恢复文档
+ */
+export const reqRecoverArticle = (articleid) => ajax('/apis/article/recover',{articleid},'POST')
+
+/*
+文档收藏与否
+islike  0取消收藏 1收藏
+ */
+export const reqLikeornotArticle = (userid,articleid,islike) => ajax('/apis/article/likeornot',{
+  userid,articleid,islike
+},'POST')
+
+/*
+获取最近浏览的文档
+ */
+export const reqGetRecentArticle = (userid) => ajax('/apis/article/getrecentwatch',{userid},'POST')
+
+/*
+获取最近浏览的文档（异步）
+ */
+export const reqGetRecentArticleYi = () =>ajax('/apis/article/getrecentwatchYi',{},'POST')
+
+/*
+获取所有收藏
+ */
+export const reqGetAllLikesArticle = (userid) => ajax('/apis/article/getalllikes',{userid},'POST')
+
+/*
+获取所有收藏（异步）
+ */
+export const reqGetAllLikesArticleYi = () => ajax('/apis/article/getalllikesYi',{},'POST')
+
+/*
+获取所有创建
+ */
+export const reqGetAllCreateArticle = (userid) => ajax('/apis/article/getallcreations',{userid},'POST')
+
+/*
+获取所有创建（异步）
+ */
+export const reqGetAllCreateArticleYi = () =>ajax('/apis/article/getallcreationsYi',{},'POST')
+
+/*
+获取回收站文档
+ */
+export const reqGetGarbageArticle = (userid) => ajax('/apis/article/getallcreationsingarbage',{userid},'POST')
+
+/*
+获取回收站文档
+ */
+export const reqGetGarbageArticleYi = () => ajax('/apis/article/getallcreationsingarbageYi',{},'POST')
+
+/*
+改变文档修改状态
+ */
+export const reqUpdatingcodeArticle = (updatingcode,articleid) => ajax('/apis/article/updatingcodechange',{
+  updatingcode,articleid
+},'POST')
+
+/*
+获取登录验证码
+ */
+export const reqGetValidCode = () => ajax('/apis/user/getvalidcode','','POST')
+
+/*
+创建团队
+ */
+export const reqCreateTeam = (teamname,userid) => ajax('/apis/workplace/createteam', {teamname,userid},'POST')
+
+/*
+加入团队
+ */
+export const reqJoinTeam = (teamid,userid) => ajax('/apis/workplace/jointeam',{teamid,userid},'POST')
+
+/*
+退出团队
+ */
+export const reqExitTeam = (userid,teamid) => ajax('/apis/workplace/exitteam',{userid,teamid},'POST')
+
+/*
+解散团队
+ */
+export const reqDisband = (teamid) => ajax('/apis/workplace/disband',{teamid},'POST')
+
+/*
+获取全部加入的团队
+ */
+export const reqMyJoinTeam = (userid) => ajax('/apis/workplace/myjointeam',{userid},'POST')
+
+/*
+获取全部加入的团队（异步）
+ */
+export const reqMyJoinTeamYi = () => ajax('/apis/workplace/myjointeamYi',{},'POST')
+
+/*
+获取某个团队的所有成员
+ */
+export const reqGetTeamMember = (teamid) => ajax('/apis/workplace/getteammember',{teamid},'POST')
+
+/*
+获取某个团队的所有文档
+ */
+export const reqGetAllArticles = (teamid) => ajax('/apis/workplace/getallarticles',{teamid},'POST')
+
+/*
+获取创建的所有团队
+ */
+export const reqMyCreateTeam = (userid) => ajax('/apis/workplace/mycreateteam',{userid},'POST')
+
+/*
+获取创建的所有团队（异步）
+ */
+export const reqMyCreateTeamYi = () => ajax('/apis/workplace/mycreateteamYi',{},'POST')
+
+/*
+获取团队信息
+ */
+export const reqTeamInfo = (teamid) => ajax('/apis/workplace/getteaminfo',{teamid},'POST')
+
+/*
+全局搜索用户
+ */
+export const reqSearchUser = (keyword) => ajax('/apis/search/users',{keyword},'POST')

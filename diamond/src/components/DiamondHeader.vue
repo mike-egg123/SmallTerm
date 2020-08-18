@@ -9,7 +9,6 @@
       <div class="project">
         {{title}}
       </div>
-      <slot name="middle"></slot>
       <slot name="right"></slot>
 <!--      <div class="trick">-->
 <!--          已有账号？-->
