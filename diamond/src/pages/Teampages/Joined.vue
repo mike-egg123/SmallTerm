@@ -10,11 +10,14 @@
       <div style="font-size: 23px;margin-bottom: 30px;margin-top: -10px">{{checkTeamInfo.creator}}的团队</div>
       <div style="text-align: right; margin-right: 30px;margin-top: 10px"><el-button type="success" round size="mini" @click="invite">邀请新成员</el-button></div>
       <ul>
-        <li v-for="(checkTeamMember, index) in checkTeamMemberList" :key="index">
-          <Member :title="checkTeamMember.username">
-            <el-avatar size="small" :src="checkTeamMember.avatar" slot="left"></el-avatar>
-<!--            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>-->
-          </Member>
+        <li v-for="(checkTeamMember, index) in checkTeamMemberList" :key="index" @click="handleOther(checkTeamMember)">
+          <router-link to="/otherPersonInfo">
+            <Member :title="checkTeamMember.username">
+            <!-- 查看团队成员 -->
+              <el-avatar size="small" :src="checkTeamMember.avatar" slot="left"></el-avatar>
+  <!--            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>-->
+            </Member>
+          </router-link>
         </li>
       </ul>
     </el-drawer>
@@ -22,7 +25,7 @@
       <el-col style="text-align: left;padding: 20px">
         <div class="text item">创建者:{{checkTeamInfo.creator}}</div>
         <div class="text item">创建时间:{{checkTeamInfo.createtime}}</div>
-        <div class="text item">团队文档数:{{checkTeamInfo.tnum}}</div>
+        <div class="text item">团队成员人数:{{checkTeamInfo.tnum}}</div>
       </el-col>
       <hr>
       <!--创建的文档-->
@@ -39,7 +42,7 @@ import DiamondHeader from '../../components/DiamondHeader'
 import Member from '../../components/Member'
 import {mapState,mapActions} from 'vuex'
 import TeamArticle from '../../components/TeamArticle'
-import {reqExitTeam} from '../../api'
+import {reqExitTeam,reqSearchInviteUser,reqInviteUser,reqExitTeamMessage} from '../../api'
 export default {
   name: 'Joined',
   components: {Member, DiamondHeader,TeamArticle},
@@ -53,28 +56,32 @@ export default {
     ...mapState(['userInfo','checkTeamInfo','checkTeamMemberList','teamArticleList']),
   },
   methods: {
-    ...mapActions(['getTeamArticle','getMyCreateTeam','getMyTeam','getTeamInfo','getTeamMemberInfo']),
-    handleDeleteMem(){},
+    ...mapActions(['getTeamArticle','getMyCreateTeam','getMyTeam','getTeamInfo','getTeamMemberInfo',
+    'getOtherUserInfo']),
+    //退出团队
     handleDissolve() {
       this.$confirm('此操作将退出该团队, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$router.back(),
-          this.$message({
-            type: 'success',
-            message: '退出成功!'
-          });
+      }).then(async () => {
+        this.$router.back()
         //退出团队:userid,teamid
         if(this.userInfo && this.checkTeamInfo) {
           //我创建\加入的团队列表减少一个团队
-          const result=reqExitTeam(this.userInfo.userid,this.checkTeamInfo.teamid)
+          const result=await reqExitTeam(this.userInfo.userid,this.checkTeamInfo.teamid)
           //重新获取创建团队列表
-          this.getMyCreateTeam()
+          await this.getMyCreateTeam()
           //重新获取加入团队列表
-          this.getMyTeam()
+          await this.getMyTeam()
+          //退出团队成功
           if(result.status===0) {
+            //发送退出团队消息
+            const res=await reqExitTeamMessage(this.userInfo.userid,this.checkTeamInfo.teamid)
+            this.$message({
+              type: 'success',
+              message: '已退出团队'
+            });
             setTimeout(() => {
               this.getMyCreateTeam()
               this.getMyTeam()
@@ -88,15 +95,29 @@ export default {
         });
       });
     },
+    //邀请新成员
     invite() {
       this.$prompt('请输入用户名', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-      }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '你邀请的新成员是: ' + value
-        });
+      }).then(async ({ value }) => {
+        const res=await reqSearchInviteUser(this.userInfo.userid,this.checkTeamInfo.teamid,value)
+        console.log(res)
+        if(res.status===1){//邀请成功
+          this.$message({
+            type: 'success',
+            message: '你邀请的新成员是: ' + value
+          });
+          //发出邀请消息
+          const res1=await reqInviteUser(this.checkTeamInfo.teamid,res.userid,this.userInfo.userid)
+          console.log(res1)
+        }
+        else if(res.status===2){
+          this.$message({
+            type: 'danger',
+            message:res.message
+          });
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -104,6 +125,13 @@ export default {
         });
       });
     },
+    //处理点击成员，跳转成员信息页面
+    handleOther(checkTeamMember){
+      if(checkTeamMember.userid){
+        this.getOtherUserInfo(checkTeamMember.userid)
+        console.log(this.otherUserInfo)
+      }
+    }
   },
 }
 </script>

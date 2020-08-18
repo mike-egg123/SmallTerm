@@ -52,11 +52,11 @@
         </div>
         <div class="personInfo_phone"><span class="iconfont icon-shouji4"></span> 电话
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" v-model="userInfo.phone" readonly>
-          <el-link type="primary" class="change" @click="ChangePhone">修改</el-link>
+          <el-link type="primary" class="change" @click="ChangePhone" :underline="false">修改</el-link>
         </div>
         <div class="personInfo_intro"><span class="iconfont icon-zhuye"></span> 简介
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" v-model="userInfo.bio" readonly>
-         <el-link type="primary" class="change" @click="ChangeIntro">修改</el-link>
+         <el-link type="primary" class="change" @click="ChangeIntro" :underline="false">修改</el-link>
         </div>
         <el-button type="danger" class="logout" @click="logout">退出登录</el-button>
       </form>

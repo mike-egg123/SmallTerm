@@ -330,9 +330,9 @@ export default {
       }
       //alert("编辑器提交一次: " + this.userInfo.userid)     
       //延时
-      var time = 1000//延时执行，时间1000ms
-      var startTime = new Date().getTime() + parseInt(time, 10);
-      while(new Date().getTime() < startTime) {}
+      // var time = 1000//延时执行，时间1000ms
+      // var startTime = new Date().getTime() + parseInt(time, 10);
+      // while(new Date().getTime() < startTime) {}
       //修改标题和内容
       const {articleid,title,content,permission} = this     
       const result = await reqUpdate(articleid,title,content,permission)
@@ -355,7 +355,7 @@ export default {
           type: 'info',
           message: '请先登录'
         });
-//        this.$router.replace('/login')
+        this.$router.replace('/login')
       }
       else {
         //await reqReleaseLock(articleid)//for debug
@@ -367,7 +367,7 @@ export default {
             type: 'info',
             message: '您没有对该文档的访问权限'
           });
-//          this.$router.replace('/workplace')
+          this.$router.replace('/workplace')
         } else if (this.state == 1) {//readonly
           this.myConfig.readonly = true;//设置编辑器组件、提交修改按钮为不可见
         }
@@ -421,7 +421,7 @@ export default {
       var status1 = (result.status)
       if (status1 == 2) {
         this.$message('该文档正在修改，暂时无法访问')
-//        this.$router.replace('/workplace')
+        this.$router.replace('/workplace')
       }
       console.log('reqFetch...')
       console.log(result)
@@ -458,6 +458,7 @@ export default {
     this.fresh(this.userInfo.userid)
   },
   beforeDestroy () {
+    //关闭前提交一下修改
     this.change(this.userInfo.userid)
   },
 }

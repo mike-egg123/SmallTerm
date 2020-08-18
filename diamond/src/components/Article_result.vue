@@ -4,9 +4,9 @@
         <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597145866902&di=832fbb88637a7e41c778cdb9a8d8d0d3&imgtype=0&src=http%3A%2F%2Fimg12.360buyimg.com%2Fn1%2Fjfs%2Ft17584%2F253%2F2043472217%2F52049%2F6f4f6993%2F5ae1354bN57b15f6e.jpg"  alt="word" class="image">
       </router-link>
       <div style="padding: 20px;">
-        <span  style="display: inline-block; white-space: nowrap; width: 100%; overflow: hidden; text-overflow:ellipsis;">文档01</span>
+        <span  style="display: inline-block; white-space: nowrap; width: 100%; overflow: hidden; text-overflow:ellipsis">{{article.title}}</span>
         <div class="bottom clearfix">
-          <time class="time">修改时间</time>
+          <time class="time">作者：{{article.author}}</time>
           <br>
           <br>
         </div>
@@ -15,7 +15,10 @@
 </template>
 <script>
   export default {
-    name: 'Article_result'
+    name: 'Article_result',
+    props:{
+      article:Object
+    }
   }
 </script>
 

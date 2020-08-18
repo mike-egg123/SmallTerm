@@ -82,12 +82,6 @@
 // import {mapActions} from 'vuex'
   export default {
     name: "Welcome",
-    // mounted () {
-    //   this.getUserInfo()
-    // },
-    // methods:{
-    //   ...mapActions(['getUserInfo'])
-    // }
   }
 </script>
 

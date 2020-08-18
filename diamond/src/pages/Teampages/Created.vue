@@ -6,30 +6,25 @@
         <el-button @click="drawer = true" type="warning" style="margin-left: 16px;">管理成员</el-button>
       </div>
     </diamond-header>
-
-
-
     <el-drawer :visible.sync="drawer" :direction="direction" :before-close="handleClose">
       <div style="font-size: 23px;margin-bottom: 30px;margin-top: -10px">{{checkTeamInfo.creator}}的团队</div>
       <div style="text-align: right; margin-right: 30px;margin-top: 10px"><el-button type="success" round size="mini" @click="invite">邀请新成员</el-button></div>
       <ul>
-        <li v-for="(checkTeamMember, index) in checkTeamMemberList" :key="index">
-          <Member :title="checkTeamMember.username">
-            <el-avatar size="small" :src="checkTeamMember.avatar" slot="left"></el-avatar>
-            <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem" >删除成员</el-button>
-          </Member>
+        <li v-for="(checkTeamMember, index) in checkTeamMemberList" :key="index" @click="handleOther(checkTeamMember)">
+          <router-link to="/otherPersonInfo">
+            <Member :title="checkTeamMember.username">
+              <el-avatar size="small" :src="checkTeamMember.avatar" slot="left"></el-avatar>
+              <el-button type="danger" round slot="right" size="mini" class="memdelete" @click="handleDeleteMem(checkTeamMember)" v-show="checkTeamMember.userid!=userInfo.userid">删除成员</el-button>
+            </Member>
+          </router-link>
         </li>
       </ul>
     </el-drawer>
-
-
-
-
     <el-row>
       <el-col style="text-align: left;padding: 20px">
         <div class="text item">创建者:{{checkTeamInfo.creator}}</div>
         <div class="text item">创建时间:{{checkTeamInfo.createtime}}</div>
-        <div class="text item">团队文档数:{{checkTeamInfo.tnum}}</div>
+        <div class="text item">团队成员人数:{{checkTeamInfo.tnum}}</div>
       </el-col>
       <hr>
       <el-col :span="3" v-for="(teamArticleItem, index) in teamArticleList" :key="index" :offset="index%5==0?0:1">
@@ -45,7 +40,7 @@ import DiamondHeader from '../../components/DiamondHeader'
 import Member from '../../components/Member'
 import TeamArticle from '../../components/TeamArticle'
 import {mapState,mapActions} from 'vuex'
-import {reqDisband} from '../../api'
+import {reqDisband,reqOutTeam,reqOutTeamMessage,reqSearchInviteUser,reqInviteUser} from '../../api'
 export default {
   name: 'Created',
   components: {Member, DiamondHeader,TeamArticle},
@@ -57,10 +52,11 @@ export default {
     };
   },
   computed:{
-    ...mapState(['userInfo','checkTeamInfo','checkTeamMemberList','teamArticleList']),
+    ...mapState(['userInfo','checkTeamInfo','checkTeamMemberList','teamArticleList','otherUserInfo']),
   },
   methods: {
-    ...mapActions(['getTeamArticle','getMyCreateTeam','getMyTeam','getTeamInfo','getTeamMemberInfo']),
+    ...mapActions(['getTeamArticle','getMyCreateTeam','getMyTeam','getTeamInfo','getTeamMemberInfo',
+      'getOtherUserInfo']),
     handleClose(done) {
       this.$confirm('管理完成！')
         .then(_ => {
@@ -86,6 +82,7 @@ export default {
         if(this.checkTeamInfo) {
           //我创建\加入的团队列表减少一个团队
           const result=reqDisband(this.checkTeamInfo.teamid)
+          console.log(this.checkTeamInfo)
           //重新获取创建团队列表
           this.getMyCreateTeam()
           //重新获取加入团队列表
@@ -104,16 +101,30 @@ export default {
         });
       });
     },
-    handleDeleteMem() {
+    //删除团队成员reqOutTeam(踢人)
+    handleDeleteMem(checkTeamMember) {
       this.$confirm('此操作将删除该成员, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
+      }).then(async () => {
         this.$message({
           type: 'success',
-          message: '删除成功!'
+          message: '已删除成员!'
         });
+        console.log(checkTeamMember)
+        //删除成员userid,teamid
+        const result=await reqOutTeam(checkTeamMember.userid,this.checkTeamInfo.teamid)
+        //重新刷成员列表
+        await this.getTeamMemberInfo(this.checkTeamInfo)
+        console.log(this.checkTeamMemberList)
+        if(result.status===0){ //删除成功
+          //发送踢人消息通知
+          // const str=await this.reqOutTeamMessage(this.checkTeamInfo.teamid,checkTeamMember.userid,this.userInfo.userid)
+          await reqOutTeamMessage(this.checkTeamInfo.teamid,checkTeamMember.userid,this.userInfo.userid)
+          //重新刷新成员列表
+          await this.getTeamMemberInfo(this.checkTeamInfo)
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -125,11 +136,25 @@ export default {
       this.$prompt('请输入用户名', '邀请新成员', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-      }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '你邀请的新成员是: ' + value
-        });
+      }).then(async ({ value }) => {
+        //邀请新成员reqSearchInviteUser
+        const res=await reqSearchInviteUser(this.userInfo.userid,this.checkTeamInfo.teamid,value)
+        console.log(res)
+        if(res.status===1){//邀请成功
+          this.$message({
+            type: 'success',
+            message: '你邀请的新成员是: ' + value
+          });
+          //发出邀请消息
+          const res1=await reqInviteUser(this.checkTeamInfo.teamid,res.userid,this.userInfo.userid)
+          console.log(res1)
+        }
+        else if(res.status===2){
+          this.$message({
+            type: 'danger',
+            message:res.message
+          });
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -137,6 +162,13 @@ export default {
         });
       });
     },
+    //处理点击成员，跳转成员信息页面
+    handleOther(checkTeamMember){
+      if(checkTeamMember.userid){
+        this.getOtherUserInfo(checkTeamMember.userid)
+        console.log(this.otherUserInfo)
+      }
+    }
   }
 }
 </script>

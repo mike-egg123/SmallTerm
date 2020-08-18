@@ -16,10 +16,14 @@ import Joined from '../pages/Teampages/Joined'
 import Edit from '../pages/editpages/Edit'
 import Notice from '../pages/Notice/Notice'
 import SearchResult from '../pages/workplace/SearchResult'
+import OtherPersonInfo from '../pages/OtherPersonInfo/OtherPersonInfo'
 
 
 Vue.use(VueRouter)
-
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default new VueRouter({
   routes: [
     {
@@ -38,6 +42,10 @@ export default new VueRouter({
     {
       path:'/personInfo',
       component:PersonInfo
+    },
+    {
+      path: '/otherPersonInfo',
+      component: OtherPersonInfo
     },
     {
       path:'/edit/:articleid',

@@ -4,7 +4,7 @@
     <div style="padding: 20px;">
       <span>{{teamArticleItem.title}}</span>
       <div class="bottom clearfix">
-        <time class="time">{{ currentDate }}</time>
+        <time class="time">时间</time>
         <br>
         <br>
         <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start" v-if="!teamArticleItem.islike">

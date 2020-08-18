@@ -76,7 +76,7 @@ export const reqFetch = (articleid,userid) => ajax('/apis/article/get',{
 },'POST')
 
 /*
-修改文档
+修改文档(removed "userid")
  */
 export const reqUpdate = (articleid,title,content,permission) => ajax('/apis/article/updateYi',{
   articleid,title,content,permission
@@ -239,3 +239,112 @@ export const reqTeamInfo = (teamid) => ajax('/apis/workplace/getteaminfo',{teami
 全局搜索用户
  */
 export const reqSearchUser = (keyword) => ajax('/apis/search/users',{keyword},'POST')
+
+/*
+全局搜索文档
+ */
+export const reqSearchDoc = (userid,keyword) => ajax('/apis/workplace/searchdoc',{userid,keyword},'POST')
+
+/*
+全局搜索团队
+ */
+export const reqSearchTeam = (userid,keyword) => ajax('/apis/workplace/searchteam',{userid,keyword},'POST')
+
+/*
+踢人
+ */
+export const reqOutTeam = (userid,teamid) => ajax('/apis/workplace/outteam',{userid,teamid},'POST')
+
+// ================================消息通知===========================
+
+/*
+查找邀请的用户消息
+ */
+export const reqSearchInviteUser = (userid,teamid,username) => ajax('/apis/message/getuser',{userid,teamid,username},'POST')
+
+/*
+邀请用户加入团队消息
+ */
+export const reqInviteUser = (teamid,inviteduserid,userid) => ajax('/apis/message/invite',{teamid,inviteduserid,userid},'POST')
+
+/*
+接收团队消息通知
+ */
+export const reqGetTeamMessage = (userid) => ajax('/apis/message/getteammessage',{userid},'POST')
+
+/*
+接收评论消息通知
+ */
+export const reqGetCommentMessage = (userid) => ajax('/apis/message/getcommentmessage',{userid},'POST')
+
+/*
+删除评论消息通知
+ */
+export const reqSolveCommentMessage = (messageid) => ajax('/apis/message/solvecommentmessage',{messageid},'POST')
+
+/*
+删除团队消息通知
+ */
+export const reqSolveTeamMessage = (messageid) => ajax('/apis/message/solveteammessage',{messageid},'POST')
+
+/*
+退出团队消息通知(给团队创建者发送消息通知)
+ */
+export const reqExitTeamMessage = (userid,teamid) => ajax('/apis/message/exitteammessage',{userid,teamid},'POST')
+
+/*
+踢人消息通知(给被踢用户发送消息通知)
+ */
+export const reqOutTeamMessage = (teamid,outuserid,userid) => ajax('/apis/message/outteammessage',{
+  teamid,outuserid,userid
+},'POST')
+
+/*
+同意邀请消息通知(发给团队创建者)
+ */
+export const reqAgreeInvitation = (teamid,inviteuserid,userid) => ajax('/apis/message/agreeinvitation',{
+  teamid,inviteuserid,userid
+},'POST')
+
+/*
+拒绝邀请消息通知(发给团队创建者)
+ */
+export const reqRefuseInvitation = (teamid,inviteuserid,userid) => ajax('/apis/message/refuseinvitation',{
+  teamid,inviteuserid,userid
+},'POST')
+
+/*
+申请加入团队(发给团队创建者)
+ */
+export const reqApply = (teamid,userid) => ajax('/apis/message/apply',{teamid,userid},'POST')
+
+/*
+同意申请消息通知(发给申请用户)
+ */
+export const reqAgreeApply = (teamid,applyuserid,userid) => ajax('/apis/message/agreeapply',{
+  teamid,applyuserid,userid
+},'POST')
+
+/*
+拒绝申请消息通知(发给申请用户)
+ */
+export const reqRefuseApply = (teamid,applyuserid,userid) => ajax('/apis/message/refuseapply',{
+  teamid,applyuserid,userid
+},'POST')
+
+/*
+发送私信
+ */
+export const reqSendPrivateMessage = (userid,message,touserid) => ajax('/apis/chat/sendmessage',{
+  userid,message,touserid
+},'POST')
+
+/*
+接收私信
+ */
+export const reqGetPrivateMessage = (userid) => ajax('/apis/chat/getmessage',{userid},'POST')
+
+/*
+删除私信
+ */
+export const reqDeletePrivateMessage = (messageid) => ajax('/apis/chat/deletemessage',{messageid},'POST')

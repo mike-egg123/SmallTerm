@@ -7,10 +7,9 @@
         <div class="result_title">&nbsp;&nbsp;&nbsp;&nbsp;用户:</div>
         <div style="height:35px"></div>
         <el-row>
-          <el-col :span="3" v-for="(user, index) in userList" :key="index" :offset="index > 0 ? 1 : 0">
+          <el-col :span="3" v-for="(user, index) in userList" :key="index" :offset="index%6==0?0:1">
             <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
               <User_result :user="user"/>
-              
             </el-card>
           </el-col>
         </el-row>
@@ -21,9 +20,9 @@
         <div class="result_title">&nbsp;&nbsp;&nbsp;&nbsp;团队:</div>
         <div style="height:35px"></div>
         <el-row>
-          <el-col :span="5" v-for="(o, index) in 4" :key="o" :offset="index > 0 ? 1 : 0">
+          <el-col :span="7" v-for="(team, index) in teamList" :key="index" :offset="index%3==0?0:1">
             <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
-              <Team_result></Team_result>
+              <Team_result :team="team"/>
             </el-card>
           </el-col>
         </el-row>
@@ -34,9 +33,9 @@
         <div class="result_title">&nbsp;&nbsp;&nbsp;&nbsp;我的文档:</div>
         <div style="height:35px"></div>
         <el-row>
-          <el-col :span="3" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 1 : 0">
+          <el-col :span="3" v-for="(article, index) in articleList" :key="index" :offset="index%6==0?0:1">
             <el-card :body-style="{ padding: '0px' }" shadow="hover" style="margin-bottom: 20px; -webkit-transition-duration:0.3s; -webkit-transition-timing-function:linear; -webkit-transition-delay:0.01s;">
-              <Article_result></Article_result>
+              <Article_result :article="article"/>
             </el-card>
           </el-col>
         </el-row>
@@ -53,7 +52,7 @@
     name: 'SearchResult',
     components: {Article_result, Team_result, User_result},
     computed:{
-      ...mapState(['keyword','userList'])
+      ...mapState(['keyword','userList','articleList','teamList'])
     },
   }
 </script>
@@ -68,4 +67,20 @@
     text-align: left;
     font-weight: bold;
   }
+ .text {
+   font-size: 14px;
+ }
+
+ .item {
+   margin-bottom: 18px;
+ }
+
+ .clearfix:before,
+ .clearfix:after {
+   display: table;
+   content: "";
+ }
+ .clearfix:after {
+   clear: both
+ }
 </style>

@@ -2,11 +2,17 @@ import Vue from 'vue'
 import {GET_USER_INFO,USER_LOGOUT,GET_CURRENT_LIST,GET_LIKE_LIST,
   GET_CREATE_LIST,GET_GRABAGE_LIST,GET_MY_TEAM,GET_MY_CREATE_TEAM,
   GET_CHECK_TEAM_INFO,GET_TEAM_MEMBER_INFO,GET_TEAM_ARTICLE,
-  GET_SEARCH_USER_LIST,RECORD_KEYWORD} from './mutation-types'
+  GET_SEARCH_USER_LIST,RECORD_KEYWORD,GET_SEARCH_ARTICLE_LIST,
+  GET_SEARCH_TEAM_LIST,GET_OTHER_USER_INFO,GET_TEAM_MESSAGE_LIST,
+  GET_COMMENT_MESSAGE_LIST,GET_PRIVATE_MESSAGE_LIST} from './mutation-types'
 export default {
   //存入userInfo
   [GET_USER_INFO] (state, {userInfo}) {
     state.userInfo = userInfo
+  },
+  //存入otherUserInfo
+  [GET_OTHER_USER_INFO](state,{otherUserInfo}){
+    state.otherUserInfo = otherUserInfo
   },
   //获取最近浏览文档列表，并存入currentList
   [GET_CURRENT_LIST](state,{currentList}){
@@ -59,6 +65,27 @@ export default {
   [GET_SEARCH_USER_LIST](state,{userList}){
     state.userList=userList
   },
+  //全局搜索获取文档列表,并存储
+  [GET_SEARCH_ARTICLE_LIST](state,{articleList}){
+    state.articleList=articleList
+  },
+  //全局搜索获取团队列表,并存储
+  [GET_SEARCH_TEAM_LIST](state,{teamList}){
+    state.teamList=teamList
+  },
+  //存储所有团队消息
+  [GET_TEAM_MESSAGE_LIST](state,{teamMessageList}){
+    state.teamMessageList=teamMessageList
+  },
+  //存储所有评论消息
+  [GET_COMMENT_MESSAGE_LIST](state,{commentMessageList}){
+    state.commentMessageList=commentMessageList
+  },
+  //存储所有私信
+  [GET_PRIVATE_MESSAGE_LIST](state,{privateMessageList}){
+    state.privateMessageList=privateMessageList
+  },
+
   //退出，清除userInfo
   [USER_LOGOUT](state){
     state.userInfo={}

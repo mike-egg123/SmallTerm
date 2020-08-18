@@ -11,3 +11,10 @@ export const GET_TEAM_MEMBER_INFO='get_team_member_info' //获取查看的团队
 export const GET_TEAM_ARTICLE='get_team_article' //获取某个团队的文档（权限）
 export const GET_SEARCH_USER_LIST='get_search_user_list' //全局搜索获取用户列表，并存储
 export const RECORD_KEYWORD='record_keyword' //存储搜索关键词
+export const GET_SEARCH_ARTICLE_LIST='get_search_article_list' //全局搜索获取文档列表，并存储
+export const GET_SEARCH_TEAM_LIST='get_search_team_list' //全局搜索获取团队列表，并存储
+export const GET_OTHER_USER_INFO='get_other_user_info' //接收其他用户信息
+export const GET_COMMENT_MESSAGE_LIST='get_comment_message_list' //接收所有评论信息
+export const GET_TEAM_MESSAGE_LIST='get_team_message_list' //接收所有团队信息
+export const GET_PRIVATE_MESSAGE_LIST='get_private_message_list' //接收私信列表
+

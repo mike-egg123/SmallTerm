@@ -164,9 +164,12 @@ export default {
     height:20px;
     line-height:16px;
     color:#fff;
-    position: absolute;
-    top:52.5%;
-    right:35%;
+    position: relative;
+    top:-67px;
+    left:450px;
+    /*position: absolute;*/
+    /*top:52.5%;*/
+    /*right:35%;*/
     transform:translateY(-50%);
   }
   .off{

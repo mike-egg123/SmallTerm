@@ -1,5 +1,6 @@
 export default {
   userInfo: {userid:38}, // 用户信息
+  otherUserInfo:{}, //用于查看其他用户信息
   currentList: [], //最近浏览文档列表
   likeList:[] ,//收藏文档列表
   createList:[], //自己创建的文档列表
@@ -13,6 +14,9 @@ export default {
   teamList:[],//全局搜索的团队列表
   articleList:[],//全局搜索的文档列表
   keyword:{},//全局搜索的关键词
+  teamMessageList:[] ,//团队消息通知列表
+  commentMessageList:[],//评论消息通知列表
+  privateMessageList:[],//接收私信列表
   front:0,//用于翻页
   count:5,//用于翻页
 }
