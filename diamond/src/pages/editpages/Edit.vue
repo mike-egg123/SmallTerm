@@ -45,19 +45,21 @@
         </div>
       </div>
 
-      <!-- 以下文档信息显示异常 -->
-      <div class="doc_info" slot="middle">
-        文档创建者&nbsp;:&nbsp;<li>{{author}}</li>
-        创建时间&nbsp;:&nbsp;<li>{{formatDate(created_time)}}</li>&nbsp;&nbsp;
-        修改时间&nbsp;:&nbsp;<li>{{formatDate(updated_time)}}</li>&nbsp;&nbsp;
-      </div>
+      
       <!-- 三个小按钮 -->
       <div class="person_wrap" slot="right">
         <el-tooltip class="item" effect="dark" content="收藏" placement="bottom-start"><el-button icon="el-icon-star-on" circle type="warning" @click="star" size="small"></el-button></el-tooltip>
         <el-tooltip class="item" effect="dark" content="分享" placement="bottom-start"><el-button icon="el-icon-share" circle type="primary" @click="link" size="small"></el-button></el-tooltip>
         <el-tooltip class="item" effect="dark" content="添加评论" placement="bottom-start"><el-button icon="el-icon-chat-line-round" circle type="success" @click="newcomment" size="small"></el-button></el-tooltip>
       </div>
+      
     </DiamondHeader>
+    <!-- 以下文档信息显示异常 -->
+      <div class="doc_info" slot="middle">
+        文档创建者&nbsp;:&nbsp;<li>{{author}}</li>
+        创建时间&nbsp;:&nbsp;<li>{{formatDate(created_time)}}</li>&nbsp;&nbsp;
+        修改时间&nbsp;:&nbsp;<li>{{formatDate(updated_time)}}</li>&nbsp;&nbsp;
+      </div>
     <el-container style="margin: 0 100px">
       <el-aside width="80%">
         <div class="article_title">
@@ -322,12 +324,20 @@ export default {
       }
     },   
     //编辑文档并提交
-    async change() {
-      //alert("编辑器提交一次: " + this.userInfo.userid)
+    async change(userid0) {
+      if (!userid0) {
+        userid0 = this.userInfo.userid
+      }
+      //alert("编辑器提交一次: " + this.userInfo.userid)     
+      //延时
+      var time = 1000//延时执行，时间1000ms
+      var startTime = new Date().getTime() + parseInt(time, 10);
+      while(new Date().getTime() < startTime) {}
       //修改标题和内容
       const {articleid,title,content,permission} = this     
-      const result = await reqUpdate(articleid,this.userInfo.userid,title,content,permission)
+      const result = await reqUpdate(articleid,title,content,permission)
       console.log("One update to: " + this.articleid)
+      console.log("最近一次修改者:"+userid0)
       //修改权限
       await this.changePermission()
       //悬浮提示
@@ -336,7 +346,7 @@ export default {
         message:'文档保存成功'
       })
     },
-    async fresh() {     
+    async fresh() {
       const {articleid} = this
       //判断是否登录
       if (!this.userInfo.userid) 
@@ -345,21 +355,24 @@ export default {
           type: 'info',
           message: '请先登录'
         });
-        this.$router.replace('/login')
+//        this.$router.replace('/login')
       }
-      await reqReleaseLock(articleid)
-      //判断权限
-      const GotPer = await reqGetPermission(this.userInfo.userid,articleid)
-      this.state = GotPer.state
-      if (this.state == 500) {//no permission
-        this.$message({
-          type: 'info',
-          message: '您没有对该文档的访问权限'
-        });
-        this.$router.replace('/workplace')
-      } else if (this.state == 1) {//readonly
-        this.myConfig.readonly = true;//设置编辑器组件、提交修改按钮为不可见
+      else {
+        //await reqReleaseLock(articleid)//for debug
+        //判断权限
+        const GotPer = await reqGetPermission(this.userInfo.userid,articleid)
+        this.state = GotPer.state
+        if (this.state == 500) {//no permission
+          this.$message({
+            type: 'info',
+            message: '您没有对该文档的访问权限'
+          });
+//          this.$router.replace('/workplace')
+        } else if (this.state == 1) {//readonly
+          this.myConfig.readonly = true;//设置编辑器组件、提交修改按钮为不可见
+        }
       }
+      
       //获取历史权限设置
       const Got = await reqGetPermissionSetting(this.userid,this.articleid)
       this.state = Got.state//其实两次state含义不同
@@ -376,9 +389,9 @@ export default {
       const teams = await reqGetAllTeam(this.userInfo.userid)
       this.options[1].children = teams//options数组是从0开始数的，每个元素包含团队各信息
       this.options[2].children = teams
-      //console.log("Joined  teams:")
-      //console.log(this.options[1].children)
-      //根据团队名称，匹配id并保存到teamlist中
+      console.log("Joined  teams:")
+      console.log(this.options[1].children)
+      // 根据团队名称，匹配id并保存到teamlist中
       {
         if (this.lastChosen.length == 0) {
           this.selectedOptions = [[0]]
@@ -408,7 +421,7 @@ export default {
       var status1 = (result.status)
       if (status1 == 2) {
         this.$message('该文档正在修改，暂时无法访问')
-        this.$router.replace('/workplace')
+//        this.$router.replace('/workplace')
       }
       console.log('reqFetch...')
       console.log(result)
@@ -442,10 +455,10 @@ export default {
     },
   },
   async mounted () {
-    this.fresh()
+    this.fresh(this.userInfo.userid)
   },
   beforeDestroy () {
-    this.change()
+    this.change(this.userInfo.userid)
   },
 }
 </script>

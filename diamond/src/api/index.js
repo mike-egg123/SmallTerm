@@ -78,8 +78,8 @@ export const reqFetch = (articleid,userid) => ajax('/apis/article/get',{
 /*
 修改文档
  */
-export const reqUpdate = (articleid,userid,title,content,permission) => ajax('/apis/article/update',{
-  articleid,userid,title,content,permission
+export const reqUpdate = (articleid,title,content,permission) => ajax('/apis/article/updateYi',{
+  articleid,title,content,permission
 },'POST')
 
 /*

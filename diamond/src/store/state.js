@@ -1,5 +1,5 @@
 export default {
-  userInfo: {}, // 用户信息
+  userInfo: {userid:38}, // 用户信息
   currentList: [], //最近浏览文档列表
   likeList:[] ,//收藏文档列表
   createList:[], //自己创建的文档列表
