@@ -109,6 +109,7 @@ import { reqStore, reqCreate, reqFetch, reqUpdate,
   reqReleaseLock, reqGetPermission, reqSetPermission, reqGetAllTeam,
   reqGetPermissionSetting } from '../../api'  
 import { mapGetters, mapActions, mapState } from 'vuex'
+import Config from '../../../static/UEditor/ueditor.config.js'
 
 export default {
   name: 'Edit',
@@ -299,26 +300,31 @@ export default {
           this.$message('只能选择一种权限')
         } else {
             var s = this.selectedOptions[0]
-            if (s.length == 1) {
+            if (s.length == 1 && s[0] == 0) {
               this.state = 0
             }
             else {
               this.state = s[0]
-            }
+            }           
             if (this.state == 0) {//私有，teamlist为空
               const result1 = await reqSetPermission(this.userInfo.userid,this.state,this.articleid,[])
               console.log("Set permission to: " + this.articleid)
             } else {//state == 1 || state == 2
               var teamlist = []//先清空
+              console.log("在这里看到即将提交的团队权限")
+              console.log("团队权限（0/1/2）:")
+              console.log(this.state)
+              console.log("清空的团队id：")
               console.log(teamlist)
               var item
               for (var i = 0;i < this.selectedOptions.length;i++) {//这样访问是有问题的
                 teamlist.push(this.selectedOptions[i][1]);
+                console.log("一个新加入的团队id：")
                 console.log(this.selectedOptions[i][1])
               }
               
               const result1 = await reqSetPermission(this.userInfo.userid,this.state,this.articleid,teamlist)
-              console.log("Set permission to: " + this.articleid + result1.status)
+              console.log("Set permission to: " + this.articleid + result1.message)
             }
         }
       }
@@ -361,7 +367,7 @@ export default {
         //await reqReleaseLock(articleid)//for debug
         //判断权限
         const GotPer = await reqGetPermission(this.userInfo.userid,articleid)
-        this.state = GotPer.state
+        this.state = 1//GotPer.state
         if (this.state == 500) {//no permission
           this.$message({
             type: 'info',
@@ -370,7 +376,9 @@ export default {
           this.$router.replace('/workplace')
         } else if (this.state == 1) {//readonly
           this.myConfig.readonly = true;//设置编辑器组件、提交修改按钮为不可见
+          Config.readonly = true;//引入官方配置文件
         }
+        //this.myConfig.readonly = true
       }
       
       //获取历史权限设置
