@@ -17,6 +17,7 @@ import Edit from '../pages/editpages/Edit'
 import Notice from '../pages/Notice/Notice'
 import SearchResult from '../pages/workplace/SearchResult'
 import OtherPersonInfo from '../pages/OtherPersonInfo/OtherPersonInfo'
+import Jump from '../pages/Jump/Jump.vue'
 
 
 Vue.use(VueRouter)
@@ -118,8 +119,12 @@ export default new VueRouter({
       ]
     },
     {
+      path:'/:articleid',
+      component:Jump,
+    },
+    {
       path:'/',
       redirect:'/welcome'
-    }
+    },   
   ]
 })

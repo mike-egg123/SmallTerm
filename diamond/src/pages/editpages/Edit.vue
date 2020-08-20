@@ -85,7 +85,7 @@
       </el-aside>
       <el-main>
         <ul class="comment_list">
-          <li v-for="(comment,index) in comments" v-if="index>=begin&&index<end" style="padding: 10px;">
+          <li v-for="(comment,index) in comments" :key="index" v-if="(index>=begin&&index<end)" style="padding: 10px;">
             <div style="text-align: left; font-size: 15px;color: #409EFF;vertical-align:center;vertical-align: middle;line-height: 20px"><el-avatar size="medium" :src="comment.avatar"></el-avatar>&nbsp;&nbsp;&nbsp;{{comment.username}}</div>
             <div style="text-align: left; padding-left: 10px;padding-top: 5px;padding-bottom: 5px">&nbsp;&nbsp;&nbsp;&nbsp;{{comment.content}}</div>
             <div style="text-align: right;padding-top: 5px;">{{formatDate(comment.created)}}</div>
